@@ -29,5 +29,9 @@
   "Post": {
     "dataSource": "blog-loopback-mongo",
     "public": true
+  },
+  "Comment": {
+    "dataSource": "blog-loopback-mongo",
+    "public": false
   }
 }
