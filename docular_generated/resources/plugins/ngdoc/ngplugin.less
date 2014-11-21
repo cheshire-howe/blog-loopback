@@ -1,0 +1,34 @@
+.ngdoc-page {
+    .paramType {
+        &:extend(.label all, .label-default all);
+        &.string {
+            &:extend(.label-primary all);
+        }
+        &.expression {
+            &:extend(.label-warning all);
+        }
+        &.function {
+            &:extend(.label-danger all);
+        }
+        &.boolean {
+            &:extend(.label-success all);
+        }
+        &.number {
+            &:extend(.label-info all);
+        }
+    }
+    .paramList {
+        table {
+            &:extend(.table all, .table-bordered all);
+            .paramName {
+                white-space: nowrap;
+            }
+        }
+    }
+    .demoArea {
+        iframe {
+            width: 100%;
+            border: 0px;
+        }
+    }
+}

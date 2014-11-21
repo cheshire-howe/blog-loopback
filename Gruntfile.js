@@ -58,6 +58,29 @@ module.exports = function(grunt) {
         dest: 'build/prod.min.js'
       }
     },
+    loopback_sdk_angular: {
+      services: {
+        options: {
+          input: './server/server.js',
+          output: './client/js/lb-services.js'
+        }
+      }
+    },
+    docular: {
+      groups: [
+        {
+          groupTitle: 'Loopback',
+          groupId: 'loopback',
+          sections: [
+            {
+              id: 'lbServices',
+              title: 'Loopback Services',
+              scripts: ['client/js/lb-services.js']
+            }
+          ]
+        }
+      ]
+    },
     watch: {
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
@@ -79,8 +102,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-loopback-sdk-angular');
+  grunt.loadNpmTasks('grunt-docular');
   
-  grunt.registerTask('default', ['jshint', 'mochacli']);
+  grunt.registerTask('default', [
+    'jshint',
+    'loopback_sdk_angular',
+    'docular',
+    'mochacli'
+  ]);
   
   grunt.registerTask('minify', ['concat', 'uglify']);
 };
