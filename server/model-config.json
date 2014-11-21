@@ -27,7 +27,7 @@
     "public": false
   },
   "Post": {
-    "dataSource": "db",
+    "dataSource": "blog-loopback-mongo",
     "public": true
   }
 }

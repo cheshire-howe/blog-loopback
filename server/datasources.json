@@ -2,5 +2,10 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "blog-loopback-mongo": {
+    "database": "blog-loopback",
+    "name": "blog-loopback-mongo",
+    "connector": "mongodb"
   }
 }
