@@ -10,11 +10,15 @@
   "newcap": true,
   "nonew": true,
   "noarg": true,
-  "quotmark": "single",
+  //"quotmark": "single",
   "regexp": true,
   "undef": true,
   "unused": false,
   "trailing": true,
   "sub": true,
-  "maxlen": 80
+  "maxlen": 80,
+  "globals": {
+    "it": true,
+    "describe": true
+  }
 }
