@@ -17,7 +17,11 @@ module.exports = function(grunt) {
         src: ['server/**/*.js']
       },
       frontend: {
-        src: ['client/**/*.js']
+        src: [
+          'client/**/*.js',
+          '!client/vendor/**/*.js',
+          '!client/js/lb-services.js'
+        ]
       },
       backendtest: {
         src: ['test/backend/**/*.js']
@@ -114,6 +118,12 @@ module.exports = function(grunt) {
       karma: {
         files: '<%= jshint.frontendtest.src %>',
         tasks: ['jshint:frontendtest', 'karma:unit:run'] 
+      },
+      client: {
+        files: 'client/**/*.*',
+        options: {
+          livereload: true
+        }
       }
     }
   });

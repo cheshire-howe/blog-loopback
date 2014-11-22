@@ -18,6 +18,7 @@
   "sub": true,
   "maxlen": 80,
   "globals": {
+    "angular": true,
     "it": true,
     "describe": true
   }
