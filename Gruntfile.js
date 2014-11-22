@@ -13,11 +13,17 @@ module.exports = function(grunt) {
       gruntfile: {
         src: 'Gruntfile.js'
       },
-      lib: {
-        src: ['server/**/*.js', 'client/**/*.js']
+      backend: {
+        src: ['server/**/*.js']
       },
-      test: {
-        src: ['test/**/*.js']
+      frontend: {
+        src: ['client/**/*.js']
+      },
+      backendtest: {
+        src: ['test/backend/**/*.js']
+      },
+      frontendtest: {
+        src: ['test/frontend/**/*.js']
       },
       grunttasks: {
         src: ['tasks/**/*.js']
@@ -28,15 +34,22 @@ module.exports = function(grunt) {
         reporter: 'nyan',
         bail: true
       },
-      all: ['test/*.js']
+      all: ['test/backend/**/*.js']
+    },
+    karma: {
+      unit: {
+        configFile: 'test/frontend/karma.conf.js',
+        background: true,
+        singleRun: false
+      }
     },
     concat: {
       target1: {
         files: {
           'build/prod.js': [
-            'src/**/*.js',
-            '!src/app.js',
-            'src/app.js'
+            'client/js/**/*.js',
+            '!client/js/app.js',
+            'client/js/app.js'
           ]
         }
       }
@@ -46,7 +59,7 @@ module.exports = function(grunt) {
         files: [
           {
             expand: true,
-            cwd: 'client/',
+            cwd: 'client/js/',
             src: '**/*.js',
             dest: 'build/',
             ext: '.min.js'
@@ -54,8 +67,8 @@ module.exports = function(grunt) {
         ]
       },
       minify: {
-        src: 'build/prod.js',
-        dest: 'build/prod.min.js'
+        src: 'client/js/build/prod.js',
+        dest: 'client/js/build/prod.min.js'
       }
     },
     loopback_sdk_angular: {
@@ -86,13 +99,21 @@ module.exports = function(grunt) {
         files: '<%= jshint.gruntfile.src %>',
         tasks: ['jshint:gruntfile']
       },
-      src: {
-        files: '<%= jshint.lib.src %>',
-        tasks: ['jshint:lib', 'mochacli']
+      backend: {
+        files: '<%= jshint.backend.src %>',
+        tasks: ['jshint:backend', 'mochacli']
       },
-      test: {
-        files: '<%= jshint.test.src %>',
-        tasks: ['jshint:test', 'mochacli']
+      mocha: {
+        files: '<%= jshint.backendtest.src %>',
+        tasks: ['jshint:backendtest', 'mochacli']
+      },
+      frontend: {
+        files: '<%= jshint.frontend.src %>',
+        tasks: ['jshint:frontend', 'karma:unit:run']
+      },
+      karma: {
+        files: '<%= jshint.frontendtest.src %>',
+        tasks: ['jshint:frontendtest', 'karma:unit:run'] 
       }
     }
   });
@@ -104,12 +125,18 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-loopback-sdk-angular');
   grunt.loadNpmTasks('grunt-docular');
+  grunt.loadNpmTasks('grunt-karma');
   
   grunt.registerTask('default', [
     'jshint',
     'loopback_sdk_angular',
     'docular',
     'mochacli'
+  ]);
+  
+  grunt.registerTask('go', [
+    'karma:unit:start',
+    'watch'
   ]);
   
   grunt.registerTask('minify', ['concat', 'uglify']);

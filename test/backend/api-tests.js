@@ -2,7 +2,7 @@
 /* global beforeEach */
 var should = require('chai').should();
 var supertest = require('supertest');
-var app = require('../server/server');
+var app = require('../../server/server');
 var api = supertest(app);
 
 describe('Blog post api', function() {

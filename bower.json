@@ -1,0 +1,27 @@
+{
+  "name": "blog-loopback",
+  "version": "0.0.1",
+  "homepage": "https://github.com/cheshire-howe/blog-loopback",
+  "authors": [
+    "Josh Zoff <joshzoff@gmail.com>"
+  ],
+  "description": "Blog using LoopBack",
+  "main": "./client/index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "client/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.3",
+    "angular-mocks": "~1.3.3",
+    "angular-resource": "~1.3.3",
+    "angular-ui-router": "~0.2.13",
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.3.1",
+    "angular-animate": "~1.3.3"
+  }
+}
