@@ -41,5 +41,34 @@ describe('Blog post api', function() {
   
   describe('comment on blog post', function() {
     
+    var url = '/api/Posts/546ff5747e2c4b15148aaab0/comments';
+    
+    it('should not be a public api', function(done) {
+      api.get('/api/Comments')
+        .expect(404, done);
+    });
+    
+    it('should be nested in Posts', function(done) {
+      api.get(url)
+        .expect(200, done);
+    });
+    /*
+    it('should return 200 on successful POST request', function(done) {
+      api.post(url)
+        .send({ content: "Comment" })
+        .expect(200, done);
+    });
+    */
+    it('should return 422 on bad data input', function(done) {
+      api.post(url)
+        .send({ name: "Comment" })
+        .expect(422, done);
+    });
+    
+    it('should return 404 when postId does not exist', function(done) {
+      api.get('/api/Posts/1/comments')
+        .expect(404, done);
+    });
+    
   });
 });
