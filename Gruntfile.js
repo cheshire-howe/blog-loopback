@@ -32,7 +32,7 @@ module.exports = function(grunt) {
     mochacli: {
       options: {
         reporter: 'nyan',
-        bail: true
+        bail: false
       },
       all: ['test/backend/**/*.js']
     },
