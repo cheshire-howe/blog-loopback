@@ -10,10 +10,11 @@ var blogApp = angular.module('blogApp', [
 blogApp.config([
   '$stateProvider',
   '$urlRouterProvider',
-  function($stateProvider, $urlRouterProvider) {
+  '$locationProvider',
+  function($stateProvider, $urlRouterProvider, $locationProvider) {
     $stateProvider
       .state('blog', {
-        url: '',
+        url: '/',
         templateUrl: 'js/blog/templates/blog.html',
         controller: 'BlogCtrl'
       })
@@ -22,6 +23,7 @@ blogApp.config([
         templateUrl: 'js/blog/templates/create.html',
         controller: 'PostCreateCtrl'
       });
-    $urlRouterProvider.otherwise('blog');
+    $urlRouterProvider.otherwise('/');
+    $locationProvider.html5Mode(true);
   }
 ]);
