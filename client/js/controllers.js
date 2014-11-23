@@ -14,8 +14,7 @@ blogControllers.controller('PostCreateCtrl', ['$scope', '$state', 'Post',
         .create($scope.newPost)
         .$promise
         .then(function(post) {
-          //$scope.newPost = '';
-          $scope.postForm.content.$setPristine();
+          $scope.postForm.$setPristine();
           $state.go('blog');
         });
     };
