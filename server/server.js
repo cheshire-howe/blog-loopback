@@ -21,6 +21,13 @@ boot(app, __dirname);
 var path = require('path');
 app.use(loopback.static(path.resolve(__dirname, '../client')));
 
+// If static file isn't found, it's an html5 route
+app.all('/*', function(req, res, next) {
+  res.sendFile('index.html', { 
+    root: __dirname + '/../client'
+  });
+});
+
 // Requests that get this far won't be handled
 // by any middleware. Convert them into a 404 error
 // that will be handled later down the chain.
