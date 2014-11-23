@@ -4,7 +4,7 @@
 
 describe('Blog controllers', function() {
     
- var scope, ctrl, $httpBackend, Post;
+  var scope, ctrl, $httpBackend, Post;
   
   var url = '/api/Posts';
   

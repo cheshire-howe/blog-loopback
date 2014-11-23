@@ -149,5 +149,13 @@ module.exports = function(grunt) {
     'watch'
   ]);
   
-  grunt.registerTask('minify', ['concat', 'uglify']);
+  grunt.registerTask('minify', [
+    'concat',
+    'uglify'
+  ]);
+  
+  grunt.registerTask('test', [
+    'karma:unit:run',
+    'mochacli'
+  ]);
 };
