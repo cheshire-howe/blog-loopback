@@ -4,7 +4,8 @@ var blogApp = angular.module('blogApp', [
   'lbServices',
   'ui.router',
   'ui.bootstrap',
-  'blogControllers'
+  'blogControllers',
+  'blogDirectives'
 ]);
 
 blogApp.config([
@@ -15,8 +16,13 @@ blogApp.config([
     $stateProvider
       .state('blog', {
         url: '/',
-        templateUrl: 'js/blog/templates/blog.html',
-        controller: 'BlogCtrl'
+        templateUrl: 'js/blog/templates/posts.html',
+        controller: 'PostCtrl'
+      })
+      .state('postDetail', {
+        url: '/Post/:id',
+        templateUrl: 'js/blog/templates/detail.html',
+        controller: 'PostDetailCtrl'
       })
       .state('postCreate', {
         url: '/Post/create',

@@ -4,3 +4,7 @@ body {
 .glyphicon-remove:hover {
   cursor:pointer;
 }
+
+a[ui-sref] {
+  cursor: pointer;
+}
