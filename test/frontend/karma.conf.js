@@ -5,6 +5,7 @@ module.exports = function(config){
 
     files : [
       'client/vendor/angular/angular.js',
+      'client/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
       'client/vendor/angular-ui-router/release/angular-ui-router.js',
       'client/vendor/angular-resource/angular-resource.js',
       'client/vendor/angular-animate/angular-animate.js',

@@ -20,6 +20,8 @@
   "globals": {
     "angular": true,
     "it": true,
-    "describe": true
+    "describe": true,
+    "beforeEach": true,
+    "inject": true
   }
 }
