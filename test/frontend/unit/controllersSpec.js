@@ -30,7 +30,7 @@ describe('Blog controllers', function() {
   beforeEach(module('blogApp'));
   beforeEach(module('lbServices'));
   
-  describe('BlogCtrl', function() {
+  describe('PostCtrl', function() {
     
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
       $httpBackend = _$httpBackend_;
@@ -38,7 +38,7 @@ describe('Blog controllers', function() {
         .respond(mockData);
       
       scope = $rootScope.$new();
-      ctrl = $controller('BlogCtrl', { $scope: scope });
+      ctrl = $controller('PostCtrl', { $scope: scope });
     }));
     
     
@@ -103,7 +103,7 @@ describe('Blog controllers', function() {
     });
     
     it('should make xhr request on success', function() {
-      $httpBackend.expectGET('js/blog/templates/blog.html')
+      $httpBackend.expectGET('js/blog/templates/posts.html')
         .respond('<html></html>');
       
       $httpBackend.flush();
