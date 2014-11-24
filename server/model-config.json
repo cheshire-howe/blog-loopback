@@ -27,11 +27,11 @@
     "public": false
   },
   "Post": {
-    "dataSource": "blog-loopback-mongo",
+    "dataSource": "db",
     "public": true
   },
   "Comment": {
-    "dataSource": "blog-loopback-mongo",
+    "dataSource": "db",
     "public": false
   }
 }

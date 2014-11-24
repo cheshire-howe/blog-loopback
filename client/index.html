@@ -42,13 +42,14 @@
            collapse="isCollapsed"
            ng-click="isCollapsed=true">
         <ul class="nav navbar-nav">
-          <li><a ui-sref="postCreate">Create Post</a></li>
+<!--          <li><a ui-sref="postCreate">Create Post</a></li>-->
+          <li id="navtabs"><a ui-sref="postCreate">Create Post</a></li>
         </ul>
       </div>
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="contentPage">
     <div ui-view></div>
   </div>
 
