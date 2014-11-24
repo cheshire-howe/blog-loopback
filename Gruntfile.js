@@ -45,6 +45,10 @@ module.exports = function(grunt) {
         configFile: 'test/frontend/karma.conf.js',
         background: true,
         singleRun: false
+      },
+      single: {
+        configFile: 'test/frontend/karma.conf.js',
+        singleRun: true
       }
     },
     concat: {
@@ -155,7 +159,7 @@ module.exports = function(grunt) {
   ]);
   
   grunt.registerTask('test', [
-    'karma:unit:run',
+    'karma:single',
     'mochacli'
   ]);
 };

@@ -41,7 +41,7 @@ describe('Blog post api', function() {
   
   describe('comment on blog post', function() {
     
-    var url = '/api/Posts/546ff5747e2c4b15148aaab0/comments';
+    var url = '/api/Posts/546f6180a739fc19402dd7f7/comments';
     
     it('should not be a public api', function(done) {
       api.get('/api/Comments')
