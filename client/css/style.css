@@ -5,6 +5,6 @@ body {
   cursor:pointer;
 }
 
-a[ui-sref] {
+a[ui-sref], a[ng-really] {
   cursor: pointer;
 }
