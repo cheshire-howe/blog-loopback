@@ -1,0 +1,24 @@
+<div class="form-group"
+     ng-class="{'has-error': postForm.title.$invalid
+       && postForm.title.$dirty}">
+  <input type="text" class="form-control" name="title"
+         placeholder="Title" autocomplete="off" required
+         ng-model="newPost.title">
+  <span class="has-error control-label"
+        ng-show="postForm.title.$invalid && postForm.title.$dirty">
+    Title is required
+  </span>
+</div>
+<div class="form-group"
+     ng-class="{'has-error': postForm.content.$invalid
+       && postForm.content.$dirty}">
+  <textarea class="form-control" name="content"
+            placeholder="Write your thoughts here..."               
+            autocomplete="off" required rows="12"
+            ng-model="newPost.content"></textarea>
+  <span class="has-error control-label"
+        ng-show="postForm.content.$invalid 
+          && postForm.content.$dirty">
+    Content is required
+  </span>
+</div>

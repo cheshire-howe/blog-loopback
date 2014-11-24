@@ -1,6 +1,6 @@
-<h1>Create a Blog Post!</h1>
+<h1>Edit a Blog Post</h1>
 <hr>
-<form name="postForm" novalidate ng-submit="addPost()">
+<form name="postForm" novalidate ng-submit="editPost(newPost)">
   <div class="form-group"
        ng-class="{'has-error': postForm.title.$invalid
          && postForm.title.$dirty}">
@@ -16,9 +16,9 @@
        ng-class="{'has-error': postForm.content.$invalid
          && postForm.content.$dirty}">
     <textarea class="form-control" name="content"
-             placeholder="Write your thoughts here..."               
-             autocomplete="off" required rows="12"
-             ng-model="newPost.content"></textarea>
+              placeholder="Write your thoughts here..."               
+              autocomplete="off" required rows="12"
+              ng-model="newPost.content"></textarea>
     <span class="has-error control-label"
           ng-show="postForm.content.$invalid 
             && postForm.content.$dirty">
@@ -26,6 +26,6 @@
     </span>
   </div>
   <button class="btn btn-primary" ng-disabled="postForm.$invalid">
-    Create
+    Edit!
   </button>
 </form>

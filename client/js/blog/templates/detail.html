@@ -1,7 +1,7 @@
 <h1>{{post.title}}</h1>
 <div class="blog-content">{{post.content}}</div>
 <p>
-  <a ui-sref="#">Edit</a> | 
+  <a ui-sref="postEdit({id: post.id})">Edit</a> | 
   <a ng-really-message="Are You Sure?"
      ng-really-click="deletePost('{{post.id}}')">
     Delete

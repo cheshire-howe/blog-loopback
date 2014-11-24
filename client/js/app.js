@@ -19,15 +19,20 @@ blogApp.config([
         templateUrl: 'js/blog/templates/posts.html',
         controller: 'PostCtrl'
       })
+      .state('postCreate', {
+        url: '/Post/create',
+        templateUrl: 'js/blog/templates/create.html',
+        controller: 'PostCreateCtrl'
+      })
       .state('postDetail', {
         url: '/Post/:id',
         templateUrl: 'js/blog/templates/detail.html',
         controller: 'PostDetailCtrl'
       })
-      .state('postCreate', {
-        url: '/Post/create',
-        templateUrl: 'js/blog/templates/create.html',
-        controller: 'PostCreateCtrl'
+      .state('postEdit', {
+        url: '/Post/:id/edit',
+        templateUrl: 'js/blog/templates/edit.html',
+        controller: 'PostEditCtrl'
       });
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);

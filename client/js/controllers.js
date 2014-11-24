@@ -28,7 +28,23 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
     $scope.post = Post.get({id: $stateParams.id});
     
     $scope.deletePost = function(id) {
-      Post.delete({ id: id }, function() {
+      Post.deleteById({ id: id })
+        .$promise
+        .then(function() {
+          $state.go('blog');
+        });
+    };
+  }]);
+
+blogControllers.controller('PostEditCtrl', ['$scope',
+                                            '$stateParams',
+                                            '$state',
+                                            'Post',
+  function($scope, $stateParams, $state, Post) {
+    $scope.newPost = Post.get({id: $stateParams.id});
+    
+    $scope.editPost = function() {
+      $scope.newPost.$save(function () {
         $state.go('blog');
       });
     };
