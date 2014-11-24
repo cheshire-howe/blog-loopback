@@ -113,6 +113,54 @@ describe('Blog controllers', function() {
     
   });
   
+  describe('PostDetailCtrl', function() {
+    
+    var detailUrl = '/api/Posts/1';
+    
+    var singleMockData = {
+      title: 'One',
+      id: 1,
+      content: 'One'
+    };
+      
+    var stateParams = {
+      id: 1
+    };
+    
+    beforeEach(inject(function($controller, _Post_) {
+      
+      Post = _Post_;
+      
+      ctrl = $controller('PostDetailCtrl', {
+        $scope: scope,
+        $stateParams: stateParams,
+        Post: Post
+      });
+      
+      $httpBackend.expectGET(detailUrl)
+        .respond(singleMockData);
+    }));
+    
+    it('should get a single blog post', function() {
+      $httpBackend.expectGET('js/blog/templates/posts.html')
+        .respond('');
+      expect(scope.post).toEqualData({});
+      $httpBackend.flush();
+      expect(scope.post).toEqualData(singleMockData);
+    });
+    
+    it('should delete the blog post by id and redirect', function() {
+      $httpBackend.expectDELETE(detailUrl)
+        .respond(204);
+      $httpBackend.expectGET('js/blog/templates/posts.html')
+        .respond('');
+      
+      scope.deletePost(stateParams.id);
+      $httpBackend.flush();
+    });
+    
+  });
+  
   
   describe('PostEditCtrl', function() {
     
