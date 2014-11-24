@@ -4,7 +4,13 @@ var blogControllers = angular.module('blogControllers', []);
 
 blogControllers.controller('PostCtrl', ['$scope', 'Post',
   function($scope, Post) {
-    $scope.posts = Post.query();
+    $scope.posts = [];
+    Post
+      .find()
+      .$promise
+      .then(function(results) {
+        $scope.posts = results;
+      });
   }]);
 
 blogControllers.controller('PostCreateCtrl', ['$scope', '$state', 'Post',
@@ -28,7 +34,8 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
     $scope.post = Post.get({id: $stateParams.id});
     
     $scope.deletePost = function(id) {
-      Post.deleteById({ id: id })
+      Post
+        .deleteById({ id: id })
         .$promise
         .then(function() {
           $state.go('blog');
