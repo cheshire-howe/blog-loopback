@@ -4,9 +4,7 @@
 
 describe('Blog controllers', function() {
     
-  var scope, ctrl, $httpBackend, $stateParams, Post;
-  
-  var url = '/api/Posts';
+  var scope, state, ctrl, $httpBackend, $stateParams, Post;
   
   var mockData = [
     {
@@ -29,13 +27,17 @@ describe('Blog controllers', function() {
   
   beforeEach(module('blogApp'));
   beforeEach(module('lbServices'));
+  beforeEach(module('stateMock'));
   
-  beforeEach(inject(function(_$httpBackend_, $rootScope) {
-      $httpBackend = _$httpBackend_;
-      scope = $rootScope.$new();
+  beforeEach(inject(function(_$httpBackend_, $rootScope, $state) {
+    $httpBackend = _$httpBackend_;
+    scope = $rootScope.$new();
+    state = $state;
   }));
   
   describe('PostCtrl', function() {
+  
+    var url = '/api/Posts';
     
     beforeEach(inject(function($controller) {
       $httpBackend.expectGET(url)
@@ -71,6 +73,8 @@ describe('Blog controllers', function() {
 
   
   describe('PostCreateCtrl', function() {
+  
+    var url = '/api/Posts';
     
     var mockPostData = {title: 'One', content: 'One'};
     
@@ -87,8 +91,6 @@ describe('Blog controllers', function() {
       // when mockPostData is the second argument
       $httpBackend.expectPOST(url, mockPostData)
         .respond(mockData.push(mockPostData));
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
       
       scope.newPost = mockPostData;
       scope.addPost();
@@ -105,10 +107,12 @@ describe('Blog controllers', function() {
     });
     
     it('should make xhr request on success', function() {
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
-      
+      $httpBackend.expectPOST(url, mockPostData)
+        .respond(mockData.push(mockPostData));
+      scope.newPost = mockPostData;
+      scope.addPost();
       $httpBackend.flush();
+      state.expectTransitionTo('blog');
     });
     
   });
@@ -144,6 +148,10 @@ describe('Blog controllers', function() {
       id: 1
     };
     
+    var mockCommentForm = {
+      $setPristine: function() {}
+    };
+    
     beforeEach(inject(function($controller, _Post_) {
       
       Post = _Post_;
@@ -161,8 +169,6 @@ describe('Blog controllers', function() {
     }));
     
     it('should get a single blog post', function() {
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
       expect(scope.post).toEqualData({});
       $httpBackend.flush();
       expect(scope.post).toEqualData(singleMockData);
@@ -171,16 +177,12 @@ describe('Blog controllers', function() {
     it('should delete the blog post by id and redirect', function() {
       $httpBackend.expectDELETE(detailUrl)
         .respond(204);
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
       
       scope.deletePost(stateParams.id);
-      $httpBackend.flush();
+      state.expectTransitionTo('blog');
     });
     
     it('should get all the comments', function() {
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
       $httpBackend.flush();
       expect(scope.comments.length).toEqual(2);
     });
@@ -189,18 +191,15 @@ describe('Blog controllers', function() {
        'and addComment() should do its thing', function() {
       $httpBackend.expectPOST(detailUrl + '/comments', newCommentMockData)
         .respond(newCommentMockData);
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
       $httpBackend.expectGET(detailUrl + '/comments')
         .respond(commentMockData);
       
-      scope.commentForm = {
-        $setPristine: function() {}
-      };
+      scope.commentForm = mockCommentForm;
       scope.post.id = 1;
       scope.newComment = newCommentMockData;
       scope.addComment();
       $httpBackend.flush();
+      state.ensureAllTransitionsHappened();
     });
     
   });
@@ -244,12 +243,12 @@ describe('Blog controllers', function() {
       
       $httpBackend.expectPUT(putUrl, editedPutData)
         .respond(editedPutData);
-      $httpBackend.expectGET('js/blog/templates/posts.html')
-        .respond('');
       
       scope.newPost = editedPutData;
       scope.editPost();
+      state.expectTransitionTo('blog');
       $httpBackend.flush();
+      state.ensureAllTransitionsHappened();
     });
     
   });

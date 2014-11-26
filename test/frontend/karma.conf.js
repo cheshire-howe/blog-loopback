@@ -11,8 +11,7 @@ module.exports = function(config){
       'client/vendor/angular-animate/angular-animate.js',
       'client/vendor/angular-mocks/angular-mocks.js',
       'client/js/**/*.js',
-      'test/frontend/unit/**/*.js',
-      'test/frontend/stateMock.js'
+      'test/frontend/unit/**/*.js'
     ],
 
     frameworks: ['jasmine'],
