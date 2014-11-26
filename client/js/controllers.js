@@ -2,7 +2,8 @@
 
 var blogControllers = angular.module('blogControllers', []);
 
-blogControllers.controller('PostCtrl', ['$scope', 'Post',
+blogControllers.controller('PostCtrl', ['$scope',
+                                        'Post',
   function($scope, Post) {
     $scope.posts = [];
     Post
@@ -13,7 +14,9 @@ blogControllers.controller('PostCtrl', ['$scope', 'Post',
       });
   }]);
 
-blogControllers.controller('PostCreateCtrl', ['$scope', '$state', 'Post',
+blogControllers.controller('PostCreateCtrl', ['$scope',
+                                              '$state',
+                                              'Post',
   function($scope, $state, Post) {
     $scope.addPost = function() {
       Post
