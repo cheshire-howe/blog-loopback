@@ -16,8 +16,7 @@
   "relations": {
     "comments": {
       "type": "hasMany",
-      "model": "Comment",
-      "foreignKey": ""
+      "model": "Comment"
     }
   },
   "acls": [],
