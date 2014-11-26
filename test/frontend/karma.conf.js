@@ -10,6 +10,7 @@ module.exports = function(config){
       'client/vendor/angular-resource/angular-resource.js',
       'client/vendor/angular-animate/angular-animate.js',
       'client/vendor/angular-mocks/angular-mocks.js',
+      'client/vendor/angular-xeditable/dist/js/xeditable.min.js',
       'client/js/**/*.js',
       'test/frontend/unit/**/*.js'
     ],

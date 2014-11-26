@@ -28,6 +28,7 @@ describe('Blog controllers', function() {
   beforeEach(module('blogApp'));
   beforeEach(module('lbServices'));
   beforeEach(module('stateMock'));
+  beforeEach(module('xeditable'));
   
   beforeEach(inject(function(_$httpBackend_, $rootScope, $state) {
     $httpBackend = _$httpBackend_;
@@ -143,6 +144,10 @@ describe('Blog controllers', function() {
     var newCommentMockData = {
       content: "Foo"
     };
+    
+    var editCommentMockData = {
+      content: "Bar"
+    };
       
     var stateParams = {
       id: 1
@@ -200,6 +205,15 @@ describe('Blog controllers', function() {
       scope.addComment();
       $httpBackend.flush();
       state.ensureAllTransitionsHappened();
+    });
+    
+    it('should update a comment', function() {
+      $httpBackend.expectPUT(detailUrl + '/comments/' + commentMockData[0].id)
+        .respond('');
+      
+      scope.post.id = singleMockData.id;
+      scope.editComment(editCommentMockData, commentMockData[0].id);
+      $httpBackend.flush();
     });
     
   });
