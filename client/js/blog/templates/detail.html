@@ -35,7 +35,11 @@
   <div class="comments">
    <h2>Comments</h2>
     <ul ng-repeat="comment in comments">
-      <li>{{comment.content}}</li>
+      <li>
+        <a href="#" editable-text="comment.content" onaftersave="editComment($data, comment.id)">
+          {{comment.content}}
+        </a>
+      </li>
     </ul>
   </div>
 </div>

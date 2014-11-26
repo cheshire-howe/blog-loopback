@@ -4,9 +4,14 @@ var blogApp = angular.module('blogApp', [
   'lbServices',
   'ui.router',
   'ui.bootstrap',
+  'xeditable',
   'blogControllers',
   'blogDirectives'
 ]);
+
+blogApp.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
 
 blogApp.config([
   '$stateProvider',

@@ -39,6 +39,7 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
       });
     }
     getComments();
+    console.log($scope.comments);
     
     $scope.deletePost = function(id) {
       Post
@@ -60,6 +61,17 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
           $scope.newComment = '';
           $scope.commentForm.$setPristine();
           getComments();
+        });
+    };
+    
+    $scope.editComment = function(data, id) {
+      Post
+        .prototype$__updateById__comments({
+          fk: id,
+          id: $scope.post.id
+        },
+        {
+          content: data
         });
     };
     
