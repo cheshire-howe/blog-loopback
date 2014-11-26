@@ -39,7 +39,6 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
       });
     }
     getComments();
-    console.log($scope.comments);
     
     $scope.deletePost = function(id) {
       Post
