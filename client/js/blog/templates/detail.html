@@ -1,17 +1,41 @@
-<h1>{{post.title}}</h1>
-<div class="blog-content">{{post.content}}</div>
-<p>
-  <a ui-sref="postEdit({id: post.id})">Edit</a> | 
-  <a ng-really-message="Are You Sure?"
-     ng-really-click="deletePost('{{post.id}}')">
-    Delete
-  </a>
-</p>
+<div class="row">
+  <h1>{{post.title}}</h1>
+  <div class="blog-content">{{post.content}}</div>
+  <p>
+    <a ui-sref="postEdit({id: post.id})">Edit</a> | 
+    <a ng-really-message="Are You Sure?"
+       ng-really-click="deletePost('{{post.id}}')">
+      Delete
+    </a>
+  </p>
+</div>
 
+<div class="row">
+  <form name="commentForm" novalidate ng-submit="addComment()">
+    <div class="form-group col-xs-10"
+         ng-class="{'has-error': commentForm.content.$invalid
+           && commentForm.content.$dirty}">
+      <div>
+        <input type="text" class="form-control" name="content"
+               placeholder="What do you think of this post?" autocomplete="off" required
+               ng-model="newComment.content">
+        <span class="has-error control-label"
+              ng-show="commentForm.content.$invalid && commentForm.content.$dirty">
+          Comment is required
+        </span>
+      </div>
+    </div>
+    <button class="btn btn-primary col-xs-2" ng-disabled="commentForm.$invalid">
+      Create
+    </button>
+  </form>
+</div>
 
-<div class="comments">
- <h2>Comments</h2>
-  <ul ng-repeat="comment in comments">
-    <li>{{comment.content}}</li>
-  </ul>
+<div class="row">
+  <div class="comments">
+   <h2>Comments</h2>
+    <ul ng-repeat="comment in comments">
+      <li>{{comment.content}}</li>
+    </ul>
+  </div>
 </div>

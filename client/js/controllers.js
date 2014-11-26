@@ -33,9 +33,12 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
   function($scope, $stateParams, $state, Post) {
     $scope.post = Post.get({id: $stateParams.id});
     
-    $scope.comments = Post.prototype$__get__comments({
-      id: $stateParams.id
-    });
+    function getComments() {
+      $scope.comments = Post.prototype$__get__comments({
+        id: $stateParams.id
+      });
+    };
+    getComments();
     
     $scope.deletePost = function(id) {
       Post
@@ -45,6 +48,21 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
           $state.go('blog');
         });
     };
+      
+    $scope.addComment = function() {
+      Post
+        .prototype$__create__comments(
+          { id: $scope.post.id },
+          { content: $scope.newComment.content }
+        )
+        .$promise
+        .then(function(comment) {
+          $scope.newComment = '';
+          $scope.commentForm.$setPristine();
+          getComments();
+        });
+    };
+    
   }]);
 
 blogControllers.controller('PostEditCtrl', ['$scope',
