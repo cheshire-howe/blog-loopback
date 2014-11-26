@@ -37,7 +37,7 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
       $scope.comments = Post.prototype$__get__comments({
         id: $stateParams.id
       });
-    };
+    }
     getComments();
     
     $scope.deletePost = function(id) {

@@ -122,6 +122,23 @@ describe('Blog controllers', function() {
       id: 1,
       content: 'One'
     };
+    
+    var commentMockData = [
+      {
+        id: 1,
+        postId: 1,
+        content: "Hello"
+      },
+      {
+        id: 2,
+        postId: 1,
+        content: "World"
+      }
+    ];
+    
+    var newCommentMockData = {
+      content: "Foo"
+    };
       
     var stateParams = {
       id: 1
@@ -140,7 +157,7 @@ describe('Blog controllers', function() {
       $httpBackend.expectGET(detailUrl)
         .respond(singleMockData);
       $httpBackend.expectGET(detailUrl + '/comments')
-        .respond('');
+        .respond(commentMockData);
     }));
     
     it('should get a single blog post', function() {
@@ -158,6 +175,31 @@ describe('Blog controllers', function() {
         .respond('');
       
       scope.deletePost(stateParams.id);
+      $httpBackend.flush();
+    });
+    
+    it('should get all the comments', function() {
+      $httpBackend.expectGET('js/blog/templates/posts.html')
+        .respond('');
+      $httpBackend.flush();
+      expect(scope.comments.length).toEqual(2);
+    });
+    
+    it('should send a new comment to the server ' +
+       'and addComment() should do its thing', function() {
+      $httpBackend.expectPOST(detailUrl + '/comments', newCommentMockData)
+        .respond(newCommentMockData);
+      $httpBackend.expectGET('js/blog/templates/posts.html')
+        .respond('');
+      $httpBackend.expectGET(detailUrl + '/comments')
+        .respond(commentMockData);
+      
+      scope.commentForm = {
+        $setPristine: function() {}
+      };
+      scope.post.id = 1;
+      scope.newComment = newCommentMockData;
+      scope.addComment();
       $httpBackend.flush();
     });
     
