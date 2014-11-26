@@ -139,6 +139,8 @@ describe('Blog controllers', function() {
       
       $httpBackend.expectGET(detailUrl)
         .respond(singleMockData);
+      $httpBackend.expectGET(detailUrl + '/comments')
+        .respond('');
     }));
     
     it('should get a single blog post', function() {

@@ -31,7 +31,11 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
                                               '$state',
                                               'Post',
   function($scope, $stateParams, $state, Post) {
-    $scope.post = Post.get({id: $stateParams.id});    
+    $scope.post = Post.get({id: $stateParams.id});
+    
+    $scope.comments = Post.prototype$__get__comments({
+      id: $stateParams.id
+    });
     
     $scope.deletePost = function(id) {
       Post
