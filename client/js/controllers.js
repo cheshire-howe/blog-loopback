@@ -99,7 +99,7 @@ blogControllers.controller('PostEditCtrl', ['$scope',
     
     $scope.editPost = function() {
       $scope.newPost.$save(function () {
-        $state.go('postDetail');
+        $state.go('postDetail', {id: $stateParams.id});
       });
     };
   }]);
