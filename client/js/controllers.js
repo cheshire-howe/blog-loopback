@@ -51,7 +51,7 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
           $state.go('blog');
         });
     };
-      
+
     $scope.addComment = function() {
       Post
         .prototype$__create__comments(
@@ -68,13 +68,24 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
     
     $scope.editComment = function(data, id) {
       Post
-        .prototype$__updateById__comments({
+        .prototype$__updateById__comments(
+        {
           fk: id,
           id: $scope.post.id
         },
         {
           content: data
         });
+    };
+    
+    $scope.deleteComment = function(id) {
+      Post
+        .prototype$__destroyById__comments(
+        {
+          fk: id,
+          id: $scope.post.id
+        });
+      getComments();
     };
     
   }]);

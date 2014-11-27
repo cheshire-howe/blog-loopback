@@ -118,6 +118,20 @@ p{
   border: none;
 }
 
+/* Comments */
+.comments ul li {
+  list-style: none;
+}
+
+.comments a {
+  font-size: 120%;
+  margin-left: 15px;
+}
+
+.comment-form {
+  margin-top: 50px;
+}
+
 /*Original*/
 .glyphicon-remove:hover {
   cursor:pointer;
