@@ -122,6 +122,8 @@ describe('Blog controllers', function() {
     
     var detailUrl = '/api/Posts/1';
     
+    var commentsUrl = detailUrl + '/comments';
+    
     var singleMockData = {
       title: 'One',
       id: 1,
@@ -169,7 +171,7 @@ describe('Blog controllers', function() {
       
       $httpBackend.expectGET(detailUrl)
         .respond(singleMockData);
-      $httpBackend.expectGET(detailUrl + '/comments')
+      $httpBackend.expectGET(commentsUrl)
         .respond(commentMockData);
     }));
     
@@ -194,9 +196,9 @@ describe('Blog controllers', function() {
     
     it('should send a new comment to the server ' +
        'and addComment() should do its thing', function() {
-      $httpBackend.expectPOST(detailUrl + '/comments', newCommentMockData)
+      $httpBackend.expectPOST(commentsUrl, newCommentMockData)
         .respond(newCommentMockData);
-      $httpBackend.expectGET(detailUrl + '/comments')
+      $httpBackend.expectGET(commentsUrl)
         .respond(commentMockData);
       
       scope.commentForm = mockCommentForm;
@@ -204,15 +206,25 @@ describe('Blog controllers', function() {
       scope.newComment = newCommentMockData;
       scope.addComment();
       $httpBackend.flush();
-      state.ensureAllTransitionsHappened();
     });
     
-    it('should update a comment', function() {
-      $httpBackend.expectPUT(detailUrl + '/comments/' + commentMockData[0].id)
+    it('should send a PUT request to the server', function() {
+      $httpBackend.expectPUT(commentsUrl + '/' + commentMockData[0].id)
         .respond('');
       
       scope.post.id = singleMockData.id;
       scope.editComment(editCommentMockData, commentMockData[0].id);
+      $httpBackend.flush();
+    });
+    
+    it('should send a DELETE request and refresh comments', function() {
+      $httpBackend.expectDELETE(commentsUrl + '/' + commentMockData[0].id)
+        .respond(204);
+      $httpBackend.expectGET(commentsUrl)
+        .respond('');
+      
+      scope.post.id = singleMockData.id;
+      scope.deleteComment(commentMockData[0].id);
       $httpBackend.flush();
     });
     
