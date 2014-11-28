@@ -39,13 +39,18 @@ blogApp.config([
         templateUrl: 'js/blog/templates/edit.html',
         controller: 'PostEditCtrl'
       })
+      .state('register', {
+        url: '/userRegister',
+        templateUrl: 'js/users/templates/register.html',
+        controller: 'UserRegisterCtrl'
+      })
       .state('login', {
-        url: '/UserLogin',
+        url: '/userLogin',
         templateUrl: 'js/users/templates/login.html',
         controller: 'UserLoginCtrl'
       })
       .state('logout', {
-        url: '/UserLogout',
+        url: '/userLogout',
         controller: function($rootScope, $state, User) {
           User.logout()
             .$promise

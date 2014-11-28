@@ -15,6 +15,10 @@ blogControllers.controller('PostCtrl', ['$rootScope',
         $rootScope.isLoggedIn = false;
       });
     
+    $scope.collapse = function() {
+      $rootScope.isCollapsed = true;
+    };
+    
     $scope.posts = [];
     Post
       .find()
@@ -121,8 +125,11 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
         {
           fk: id,
           id: $scope.post.id
+        })
+        .$promise
+        .then(function() {
+          getComments();
         });
-      getComments();
     };
     
   }]);
@@ -152,12 +159,42 @@ blogControllers.controller('PostEditCtrl', ['$rootScope',
     };
   }]);
 
+blogControllers.controller('UserRegisterCtrl', ['$rootScope',
+                                                '$scope',
+                                                '$state',
+                                                'User',
+  function($rootScope, $scope, $state, User) {
+    User.getCurrent()
+      .$promise
+      .then(function(user) {
+        $rootScope.isLoggedIn = true;
+        $scope.userId = user.id;
+        $state.go('blog');
+      }, function() {
+        $rootScope.isLoggedIn = false;
+      });
+    
+    $scope.register = function() {
+      var user = {
+        email: $scope.newUser.email,
+        password: $scope.newUser.password
+      };
+      User
+        .create(user)
+        .$promise
+        .then(function() {
+          User.login(user, function() {
+            $state.go('blog');
+          });
+        });
+    };
+  }]);
+
 blogControllers.controller('UserLoginCtrl', ['$rootScope',
                                              '$scope',
-                                             '$stateParams',
                                              '$state',
                                              'User',
-  function($rootScope, $scope, $stateParams, $state, User) {
+  function($rootScope, $scope, $state, User) {
     User.getCurrent()
       .$promise
       .then(function(user) {
@@ -182,6 +219,4 @@ blogControllers.controller('UserLoginCtrl', ['$rootScope',
         $scope.loginFail = true;
       });
     };
-    
-    User.query();
   }]);
