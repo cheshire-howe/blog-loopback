@@ -12,7 +12,13 @@
   "relations": {
     "post": {
       "type": "belongsTo",
-      "model": "Post"
+      "model": "Post",
+      "foreignKey": "postId"
+    },
+    "user": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "userId"
     }
   },
   "acls": [],
