@@ -80,8 +80,6 @@ module.factory(
          *
          */
         "login": {
-          url: urlBase + "/Users/login",
-          method: "POST",
           params: {
             include: "user"
           },
@@ -93,7 +91,9 @@ module.factory(
               LoopBackAuth.save();
               return response.resource;
             }
-          }
+          },
+          url: urlBase + "/Users/login",
+          method: "POST"
         },
 
         /**
@@ -127,15 +127,15 @@ module.factory(
          * This method returns no data.
          */
         "logout": {
-          url: urlBase + "/Users/logout",
-          method: "POST",
           interceptor: {
             response: function(response) {
               LoopBackAuth.clearUser();
               LoopBackAuth.clearStorage();
               return response.resource;
             }
-          }
+          },
+          url: urlBase + "/Users/logout",
+          method: "POST"
         },
 
         /**
@@ -169,7 +169,7 @@ module.factory(
          */
         "confirm": {
           url: urlBase + "/Users/confirm",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -204,7 +204,7 @@ module.factory(
          */
         "resetPassword": {
           url: urlBase + "/Users/reset",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -239,7 +239,7 @@ module.factory(
          */
         "prototype$__findById__accessTokens": {
           url: urlBase + "/Users/:id/accessTokens/:fk",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -271,7 +271,7 @@ module.factory(
          */
         "prototype$__destroyById__accessTokens": {
           url: urlBase + "/Users/:id/accessTokens/:fk",
-          method: "DELETE",
+          method: "DELETE"
         },
 
         /**
@@ -310,7 +310,7 @@ module.factory(
          */
         "prototype$__updateById__accessTokens": {
           url: urlBase + "/Users/:id/accessTokens/:fk",
-          method: "PUT",
+          method: "PUT"
         },
 
         /**
@@ -344,9 +344,9 @@ module.factory(
          * </em>
          */
         "prototype$__get__accessTokens": {
-          url: urlBase + "/Users/:id/accessTokens",
-          method: "GET",
           isArray: true,
+          url: urlBase + "/Users/:id/accessTokens",
+          method: "GET"
         },
 
         /**
@@ -383,7 +383,7 @@ module.factory(
          */
         "prototype$__create__accessTokens": {
           url: urlBase + "/Users/:id/accessTokens",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -413,7 +413,7 @@ module.factory(
          */
         "prototype$__delete__accessTokens": {
           url: urlBase + "/Users/:id/accessTokens",
-          method: "DELETE",
+          method: "DELETE"
         },
 
         /**
@@ -447,7 +447,7 @@ module.factory(
          */
         "prototype$__count__accessTokens": {
           url: urlBase + "/Users/:id/accessTokens/count",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -485,7 +485,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/Users",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -523,7 +523,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/Users",
-          method: "PUT",
+          method: "PUT"
         },
 
         /**
@@ -555,7 +555,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/Users/:id/exists",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -588,7 +588,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/Users/:id",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -620,9 +620,9 @@ module.factory(
          * </em>
          */
         "find": {
-          url: urlBase + "/Users",
-          method: "GET",
           isArray: true,
+          url: urlBase + "/Users",
+          method: "GET"
         },
 
         /**
@@ -655,7 +655,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/Users/findOne",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -689,7 +689,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/Users/update",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -719,7 +719,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/Users/:id",
-          method: "DELETE",
+          method: "DELETE"
         },
 
         /**
@@ -751,7 +751,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/Users/count",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -788,7 +788,13 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/Users/:id",
-          method: "PUT",
+          method: "PUT"
+        },
+
+        // INTERNAL. Use Post.user() instead.
+        "::get::Post::user": {
+          url: urlBase + "/Posts/:id/user",
+          method: "GET"
         },
 
         /**
@@ -1035,6 +1041,12 @@ module.factory(
       { 'id': '@id' },
       {
 
+        // INTERNAL. Use Post.user() instead.
+        "prototype$__get__user": {
+          url: urlBase + "/Posts/:id/user",
+          method: "GET"
+        },
+
         /**
          * @ngdoc method
          * @name lbServices.Post#prototype$__findById__comments
@@ -1067,7 +1079,7 @@ module.factory(
          */
         "prototype$__findById__comments": {
           url: urlBase + "/Posts/:id/comments/:fk",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -1099,7 +1111,7 @@ module.factory(
          */
         "prototype$__destroyById__comments": {
           url: urlBase + "/Posts/:id/comments/:fk",
-          method: "DELETE",
+          method: "DELETE"
         },
 
         /**
@@ -1138,7 +1150,7 @@ module.factory(
          */
         "prototype$__updateById__comments": {
           url: urlBase + "/Posts/:id/comments/:fk",
-          method: "PUT",
+          method: "PUT"
         },
 
         /**
@@ -1172,9 +1184,9 @@ module.factory(
          * </em>
          */
         "prototype$__get__comments": {
-          url: urlBase + "/Posts/:id/comments",
-          method: "GET",
           isArray: true,
+          url: urlBase + "/Posts/:id/comments",
+          method: "GET"
         },
 
         /**
@@ -1211,7 +1223,7 @@ module.factory(
          */
         "prototype$__create__comments": {
           url: urlBase + "/Posts/:id/comments",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -1241,7 +1253,7 @@ module.factory(
          */
         "prototype$__delete__comments": {
           url: urlBase + "/Posts/:id/comments",
-          method: "DELETE",
+          method: "DELETE"
         },
 
         /**
@@ -1275,7 +1287,7 @@ module.factory(
          */
         "prototype$__count__comments": {
           url: urlBase + "/Posts/:id/comments/count",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -1313,7 +1325,7 @@ module.factory(
          */
         "create": {
           url: urlBase + "/Posts",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -1351,7 +1363,7 @@ module.factory(
          */
         "upsert": {
           url: urlBase + "/Posts",
-          method: "PUT",
+          method: "PUT"
         },
 
         /**
@@ -1383,7 +1395,7 @@ module.factory(
          */
         "exists": {
           url: urlBase + "/Posts/:id/exists",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -1416,7 +1428,7 @@ module.factory(
          */
         "findById": {
           url: urlBase + "/Posts/:id",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -1448,9 +1460,9 @@ module.factory(
          * </em>
          */
         "find": {
-          url: urlBase + "/Posts",
-          method: "GET",
           isArray: true,
+          url: urlBase + "/Posts",
+          method: "GET"
         },
 
         /**
@@ -1483,7 +1495,7 @@ module.factory(
          */
         "findOne": {
           url: urlBase + "/Posts/findOne",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -1517,7 +1529,7 @@ module.factory(
          */
         "updateAll": {
           url: urlBase + "/Posts/update",
-          method: "POST",
+          method: "POST"
         },
 
         /**
@@ -1547,7 +1559,7 @@ module.factory(
          */
         "deleteById": {
           url: urlBase + "/Posts/:id",
-          method: "DELETE",
+          method: "DELETE"
         },
 
         /**
@@ -1579,7 +1591,7 @@ module.factory(
          */
         "count": {
           url: urlBase + "/Posts/count",
-          method: "GET",
+          method: "GET"
         },
 
         /**
@@ -1616,7 +1628,7 @@ module.factory(
          */
         "prototype$updateAttributes": {
           url: urlBase + "/Posts/:id",
-          method: "PUT",
+          method: "PUT"
         },
       }
     );
@@ -1754,6 +1766,42 @@ module.factory(
     */
     R.modelName = "Post";
 
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Post#user
+         * @methodOf lbServices.Post
+         *
+         * @description
+         *
+         * Fetches belongsTo relation user
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{*}` - PersistedModel id
+         *
+         *  - `refresh` – `{boolean=}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * <em>
+         * (The remote method definition does not provide any description.
+         * This usually means the response is a `User` object.)
+         * </em>
+         */
+        R.user = function() {
+          var TargetResource = $injector.get("User");
+          var action = TargetResource["::get::Post::user"];
+          return action.apply(R, arguments);
+        };
 
     return R;
   }]);

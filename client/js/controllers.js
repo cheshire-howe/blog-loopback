@@ -2,9 +2,19 @@
 
 var blogControllers = angular.module('blogControllers', []);
 
-blogControllers.controller('PostCtrl', ['$scope',
+blogControllers.controller('PostCtrl', ['$rootScope',
+                                        '$scope',
                                         'Post',
-  function($scope, Post) {
+                                        'User',
+  function($rootScope, $scope, Post, User) {
+    User.getCurrent()
+      .$promise
+      .then(function() {
+        $rootScope.isLoggedIn = true;
+      }, function() {
+        $rootScope.isLoggedIn = false;
+      });
+    
     $scope.posts = [];
     Post
       .find()
@@ -14,11 +24,23 @@ blogControllers.controller('PostCtrl', ['$scope',
       });
   }]);
 
-blogControllers.controller('PostCreateCtrl', ['$scope',
+blogControllers.controller('PostCreateCtrl', ['$rootScope',
+                                              '$scope',
                                               '$state',
                                               'Post',
-  function($scope, $state, Post) {
+                                              'User',
+  function($rootScope, $scope, $state, Post, User) {
+    User.getCurrent()
+      .$promise
+      .then(function(user) {
+        $rootScope.isLoggedIn = true;
+        $scope.userId = user.id;
+      }, function() {
+        $rootScope.isLoggedIn = false;
+      });
+    
     $scope.addPost = function() {
+      $scope.newPost.userId = localStorage.getItem('$LoopBack$currentUserId');
       Post
         .create($scope.newPost)
         .$promise
@@ -29,11 +51,22 @@ blogControllers.controller('PostCreateCtrl', ['$scope',
     };
   }]);
 
-blogControllers.controller('PostDetailCtrl', ['$scope',
+blogControllers.controller('PostDetailCtrl', ['$rootScope',
+                                              '$scope',
                                               '$stateParams',
                                               '$state',
                                               'Post',
-  function($scope, $stateParams, $state, Post) {
+                                              'User',
+  function($rootScope, $scope, $stateParams, $state, Post, User) {
+    User.getCurrent()
+      .$promise
+      .then(function(user) {
+        $rootScope.isLoggedIn = true;
+        $scope.userId = user.id;
+      }, function() {
+        $rootScope.isLoggedIn = false;
+      });
+    
     $scope.post = Post.get({id: $stateParams.id});
     
     function getComments() {
@@ -56,7 +89,10 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
       Post
         .prototype$__create__comments(
           { id: $scope.post.id },
-          { content: $scope.newComment.content }
+          {
+            content: $scope.newComment.content,
+            userId: $scope.userId
+          }
         )
         .$promise
         .then(function(comment) {
@@ -74,7 +110,8 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
           id: $scope.post.id
         },
         {
-          content: data
+          content: data,
+          userId: $scope.userId
         });
     };
     
@@ -90,11 +127,22 @@ blogControllers.controller('PostDetailCtrl', ['$scope',
     
   }]);
 
-blogControllers.controller('PostEditCtrl', ['$scope',
+blogControllers.controller('PostEditCtrl', ['$rootScope',
+                                            '$scope',
                                             '$stateParams',
                                             '$state',
                                             'Post',
-  function($scope, $stateParams, $state, Post) {
+                                            'User',
+  function($rootScope, $scope, $stateParams, $state, Post, User) {
+    User.getCurrent()
+      .$promise
+      .then(function(user) {
+        $rootScope.isLoggedIn = true;
+        $scope.userId = user.id;
+      }, function() {
+        $rootScope.isLoggedIn = false;
+      });
+    
     $scope.newPost = Post.get({id: $stateParams.id});
     
     $scope.editPost = function() {
@@ -102,4 +150,38 @@ blogControllers.controller('PostEditCtrl', ['$scope',
         $state.go('postDetail', {id: $stateParams.id});
       });
     };
+  }]);
+
+blogControllers.controller('UserLoginCtrl', ['$rootScope',
+                                             '$scope',
+                                             '$stateParams',
+                                             '$state',
+                                             'User',
+  function($rootScope, $scope, $stateParams, $state, User) {
+    User.getCurrent()
+      .$promise
+      .then(function(user) {
+        $rootScope.isLoggedIn = true;
+        $scope.userId = user.id;
+        $state.go('blog');
+      }, function() {
+        $rootScope.isLoggedIn = false;
+      });
+    
+    $scope.login = function() {
+      User.login({
+        email: $scope.user.email,
+        password: $scope.user.password
+      })
+      .$promise
+      .then(function() {
+        $scope.loginFail = false;
+        $rootScope.isLoggedIn = true;
+        $state.go('blog');
+      }, function(err) {
+        $scope.loginFail = true;
+      });
+    };
+    
+    User.query();
   }]);

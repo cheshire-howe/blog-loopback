@@ -4,10 +4,10 @@ module.exports = function(app) {
   router.post('/login', function(req, res) {
     var email = req.body.email;
     var password = req.body.password;
-    app.models.user.login({
+    app.models.User.login({
       email: email,
       password: password
-    }, 'user', function(err, token) {
+    }, 'User', function(err, token) {
       if (err) {
         res.statusCode = 400;
         res.send({
@@ -17,7 +17,7 @@ module.exports = function(app) {
         token = token.toJSON();
         res.statusCode = 200;
         res.send({
-          username: token.user.username,
+          username: token.User.username,
           accessToken: token.id
         });
       }

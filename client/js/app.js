@@ -38,6 +38,22 @@ blogApp.config([
         url: '/Post/:id/edit',
         templateUrl: 'js/blog/templates/edit.html',
         controller: 'PostEditCtrl'
+      })
+      .state('login', {
+        url: '/UserLogin',
+        templateUrl: 'js/users/templates/login.html',
+        controller: 'UserLoginCtrl'
+      })
+      .state('logout', {
+        url: '/UserLogout',
+        controller: function($rootScope, $state, User) {
+          User.logout()
+            .$promise
+            .then(function() {
+              $rootScope.isLoggedIn = false;
+            });
+          $state.go('blog');
+        }
       });
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
