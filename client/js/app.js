@@ -56,8 +56,8 @@ blogApp.config([
             .$promise
             .then(function() {
               $rootScope.isLoggedIn = false;
+              $state.go('blog');
             });
-          $state.go('blog');
         }
       });
     $urlRouterProvider.otherwise('/');
