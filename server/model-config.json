@@ -8,7 +8,8 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "db",
+    "public": false
   },
   "AccessToken": {
     "dataSource": "db",
@@ -33,5 +34,9 @@
   "Comment": {
     "dataSource": "blog-loopback-mongo",
     "public": false
+  },
+  "user": {
+    "dataSource": "blog-loopback-mongo",
+    "public": true
   }
 }

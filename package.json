@@ -10,7 +10,9 @@
     "protractor": "protractor test/frontend/protractor-conf.js"
   },
   "dependencies": {
+    "body-parser": "^1.9.3",
     "compression": "^1.0.3",
+    "debug": "^2.1.0",
     "errorhandler": "^1.1.1",
     "loopback": "^2.5.0",
     "loopback-boot": "^2.2.0",

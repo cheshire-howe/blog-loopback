@@ -1,0 +1,21 @@
+{
+  "name": "user",
+  "base": "User",
+  "idInjection": true,
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "posts": {
+      "type": "hasMany",
+      "model": "Post",
+      "foreignKey": "userId"
+    },
+    "comments": {
+      "type": "hasMany",
+      "model": "Comment",
+      "foreignKey": "userId"
+    }
+  },
+  "acls": [],
+  "methods": []
+}
