@@ -272,7 +272,7 @@ describe('Blog controllers', function() {
       
       scope.newPost = editedPutData;
       scope.editPost();
-      state.expectTransitionTo('blog');
+      state.expectTransitionTo('postDetail');
       $httpBackend.flush();
       state.ensureAllTransitionsHappened();
     });

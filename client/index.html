@@ -36,14 +36,17 @@
         <a class="navbar-brand"
            ui-sref="blog"
            ng-click="isCollapsed=true">
-          Simple Blog Created With LoopBack
+          Simple Blog
         </a>
       </div>
       <div class="collapse navbar-collapse"
            collapse="isCollapsed"
            ng-click="isCollapsed=true">
         <ul class="nav navbar-nav navbar-right">
-          <li id="navtabs"><a ui-sref="postCreate">Create Post</a></li>
+          <li id="navtabs" ng-if="!isLoggedIn"><a ui-sref="login">Login</a></li>
+          <li id="navtabs" ng-if="!isLoggedIn"><a href="#">Register</a></li>
+          <li id="navtabs" ng-if="isLoggedIn"><a ui-sref="postCreate">Create Post</a></li>
+          <li id="navtabs" ng-if="isLoggedIn"><a ui-sref="logout">Logout</a></li>
         </ul>
       </div>
     </div>

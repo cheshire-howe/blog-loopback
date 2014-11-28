@@ -2,7 +2,7 @@
   <div class="row">
     <h1>{{post.title}}</h1>
     <div class="blog-content">{{post.content}}</div>
-    <p>
+    <p ng-if="isLoggedIn">
       <a ui-sref="postEdit({id: post.id})">Edit</a> | 
       <a ng-really-message="Are You Sure?"
          ng-really-click="deletePost('{{post.id}}')">
@@ -11,7 +11,7 @@
     </p>
   </div>
 
-  <div class="row comment-form">
+  <div class="row comment-form" ng-if="isLoggedIn">
     <form name="commentForm" novalidate ng-submit="addComment()">
       <div class="form-group col-xs-10"
            ng-class="{'has-error': commentForm.content.$invalid
@@ -33,8 +33,8 @@
   </div>
 
   <div class="row">
-    <div class="comments">
-     <h2>Comments</h2>
+    <div class="comments" ng-if="isLoggedIn">
+      <h2>Comments</h2>
       <ul ng-repeat="comment in comments">
         <li>
           <i class="glyphicon glyphicon-trash"
@@ -44,6 +44,12 @@
             {{comment.content}}
           </a>
         </li>
+      </ul>
+    </div>
+    <div class="comments" ng-if="!isLoggedIn">
+      <h2>Comments</h2>
+      <ul ng-repeat="comment in comments">
+        <li>{{comment.content}}</li>
       </ul>
     </div>
   </div>

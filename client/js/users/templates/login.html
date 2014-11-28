@@ -1,0 +1,32 @@
+<h1>Login!</h1>
+<hr>
+<p ng-if="loginFail" class="has-error">Login Failed!</p>
+<form name="loginForm" novalidate ng-submit="login()">
+  <div class="form-group"
+       ng-class="{'has-error': loginForm.email.$invalid
+         && loginForm.email.$dirty}">
+    <input type="text" class="form-control" name="email"
+           placeholder="Email..." autocomplete="off" required
+           ng-model="user.email">
+    <span class="has-error control-label"
+          ng-show="loginForm.email.$invalid && loginForm.email.$dirty">
+      Email is required
+    </span>
+  </div>
+  <div class="form-group"
+       ng-class="{'has-error': loginForm.password.$invalid
+         && loginForm.password.$dirty}">
+    <input type="password" class="form-control" name="password"
+             placeholder="Password..."               
+             autocomplete="off" required rows="12"
+             ng-model="user.password">
+    <span class="has-error control-label"
+          ng-show="loginForm.password.$invalid 
+            && loginForm.password.$dirty">
+      Password is required
+    </span>
+  </div>
+  <button class="btn btn-primary" ng-disabled="loginForm.$invalid">
+    Create
+  </button>
+</form>

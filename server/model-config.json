@@ -8,23 +8,23 @@
     ]
   },
   "User": {
-    "dataSource": "db",
+    "dataSource": "blog-loopback-mongo",
     "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "blog-loopback-mongo",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "blog-loopback-mongo",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "blog-loopback-mongo",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "blog-loopback-mongo",
     "public": false
   },
   "Post": {
