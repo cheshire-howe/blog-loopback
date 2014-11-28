@@ -1,4 +1,4 @@
 # LoopBack Blog
 
-Now avaiable online! http://loopback.mine.bz/
+Now avaiable online! http://loopblog.mine.bz/
 
