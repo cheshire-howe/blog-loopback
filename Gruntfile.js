@@ -36,7 +36,8 @@ module.exports = function(grunt) {
     mochacli: {
       options: {
         reporter: 'nyan',
-        bail: false
+        bail: false,
+        timeout: 5000
       },
       all: ['test/backend/**/*.js']
     },

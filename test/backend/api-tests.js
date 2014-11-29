@@ -25,10 +25,10 @@ describe('Blog post api', function() {
         });
     });
     
-    it('should return 422 on bad POST request', function(done) {
+    it('should return 401 on any unauthorized POST request', function(done) {
       api.post(url)
         .send({ name: "Josh", isa: "guy"})
-        .expect(422, done);
+        .expect(401, done);
     });
     /*
     it('should return 201 on successful POST', function(done) {
@@ -41,7 +41,7 @@ describe('Blog post api', function() {
   
   describe('comment on blog post', function() {
     
-    var url = '/api/Posts/546f6180a739fc19402dd7f7/comments';
+    var url = '/api/Posts/1/comments';
     
     it('should not be a public api', function(done) {
       api.get('/api/Comments')
@@ -66,7 +66,7 @@ describe('Blog post api', function() {
     });
     
     it('should return 404 when postId does not exist', function(done) {
-      api.get('/api/Posts/1/comments')
+      api.get('/api/Posts/2/comments')
         .expect(404, done);
     });
     

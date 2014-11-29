@@ -14,6 +14,7 @@ module.exports = function(app) {
     debug(users);
     // create post 1 and make josh the author
     users[0].posts.create({
+      id: "1",
       title: "A New Post",
       content: "A long time ago, on a server far, far away...."
     }, function(err, post) {
