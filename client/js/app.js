@@ -51,14 +51,7 @@ blogApp.config([
       })
       .state('logout', {
         url: '/userLogout',
-        controller: function($rootScope, $state, User) {
-          User.logout()
-            .$promise
-            .then(function() {
-              $rootScope.isLoggedIn = false;
-              $state.go('blog');
-            });
-        }
+        controller: 'UserLogoutCtrl'
       });
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);

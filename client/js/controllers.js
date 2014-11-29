@@ -220,3 +220,16 @@ blogControllers.controller('UserLoginCtrl', ['$rootScope',
       });
     };
   }]);
+
+blogControllers.controller('UserLogoutCtrl', ['$rootScope',
+                                              '$state',
+                                              'User',
+  function($rootScope, $state, User) {
+    User.logout()
+      .$promise
+      .then(function() {
+        $rootScope.isLoggedIn = false;
+        $state.go('blog');
+      });
+  }
+]);

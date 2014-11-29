@@ -54,7 +54,7 @@ module.exports = function(grunt) {
     concat: {
       target1: {
         files: {
-          'build/prod.js': [
+          'client/build/prod.js': [
             'client/js/**/*.js',
             '!client/js/app.js',
             'client/js/app.js'
@@ -69,14 +69,14 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'client/js/',
             src: '**/*.js',
-            dest: 'build/',
+            dest: 'client/build/',
             ext: '.min.js'
           }
         ]
       },
       minify: {
-        src: 'client/js/build/prod.js',
-        dest: 'client/js/build/prod.min.js'
+        src: 'client/build/prod.js',
+        dest: 'client/build/prod.min.js'
       }
     },
     loopback_sdk_angular: {

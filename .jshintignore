@@ -1,2 +1,4 @@
 /client/vendor/
+/client/build/prod.js
+/client/build/prod.min.js
 /node_modules/
