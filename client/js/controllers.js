@@ -213,7 +213,6 @@ blogControllers.controller('UserLoginCtrl', ['$rootScope',
       .$promise
       .then(function() {
         $scope.loginFail = false;
-        $rootScope.isLoggedIn = true;
         $state.go('blog');
       }, function(err) {
         $scope.loginFail = true;
@@ -221,14 +220,12 @@ blogControllers.controller('UserLoginCtrl', ['$rootScope',
     };
   }]);
 
-blogControllers.controller('UserLogoutCtrl', ['$rootScope',
-                                              '$state',
+blogControllers.controller('UserLogoutCtrl', ['$state',
                                               'User',
-  function($rootScope, $state, User) {
+  function($state, User) {
     User.logout()
       .$promise
       .then(function() {
-        $rootScope.isLoggedIn = false;
         $state.go('blog');
       });
   }

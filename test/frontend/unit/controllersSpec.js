@@ -281,4 +281,98 @@ describe('Blog controllers', function() {
     });
     
   });
+  
+  describe('UserRegisterCtrl', function() {
+    var urlUsers, mockResponseUserData, User;
+    var mockUserData = {
+      email: 'josh@gmail.com',
+      password: 'foobar'
+    };
+    
+    beforeEach(inject(function($controller, _User_) {
+      User = _User_;
+      urlUsers = '/api/Users';
+      mockResponseUserData = {
+        email: 'josh@gmail.com',
+        id: 1
+      };
+      
+      ctrl = $controller('UserRegisterCtrl', {
+        $scope: scope,
+        User: User
+      });
+    }));
+    
+    it('should send the data to create a user' +
+       'and log the user in', function() {
+      $httpBackend.expectPOST(urlUsers, mockUserData)
+        .respond(mockResponseUserData);
+      $httpBackend.expectPOST(urlUsers + '/login?include=user')
+        .respond(mockUserData);
+      state.expectTransitionTo('blog');
+      
+      scope.newUser = mockUserData;
+      scope.register();
+      
+      $httpBackend.flush();
+    });
+  });
+  
+  describe('UserLoginCtrl', function() {
+    var urlUsers, mockUserData, User;
+    
+    beforeEach(inject(function($controller, _User_) {
+      User = _User_;
+      urlUsers = '/api/Users';
+      mockUserData = {
+        email: 'josh@gmail.com',
+        password: 'foobar'
+      };
+      
+      ctrl = $controller('UserLoginCtrl', {
+        $scope: scope,
+        User: User
+      });
+    }));
+    
+    it('should log a user in', function() {
+      $httpBackend.expectPOST(urlUsers + '/login?include=user')
+        .respond(mockUserData);
+      state.expectTransitionTo('blog');
+      
+      scope.user = mockUserData;
+      scope.login();
+      
+      $httpBackend.flush();
+    });
+    
+  });
+  
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
