@@ -77,7 +77,7 @@ describe('Blog controllers', function() {
   
     var url = '/api/Posts';
     
-    var mockPostData = {title: 'One', content: 'One'};
+    var mockPostData = {title: 'One', content: 'One', userId: 1};
     
     beforeEach(inject(function($controller, _Post_) {
       Post = _Post_;
@@ -100,9 +100,10 @@ describe('Blog controllers', function() {
       expect(mockData.length).toBe(3);
     });
     
-    it('should trigger Post.create', function() {
+    it('should trigger Post.create', function() {      
       spyOn(Post, 'create').andCallThrough();
       
+      scope.newPost = mockPostData;
       scope.addPost();
       expect(Post.create).toHaveBeenCalled();
     });
@@ -134,12 +135,14 @@ describe('Blog controllers', function() {
       {
         id: 1,
         postId: 1,
-        content: "Hello"
+        content: "Hello",
+        userId: 1
       },
       {
         id: 2,
         postId: 1,
-        content: "World"
+        content: "World",
+        userId: 1
       }
     ];
     

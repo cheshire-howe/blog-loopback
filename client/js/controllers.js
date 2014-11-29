@@ -44,7 +44,7 @@ blogControllers.controller('PostCreateCtrl', ['$rootScope',
       });
     
     $scope.addPost = function() {
-      $scope.newPost.userId = localStorage.getItem('$LoopBack$currentUserId');
+      $scope.newPost.userId = $scope.userId;
       Post
         .create($scope.newPost)
         .$promise
