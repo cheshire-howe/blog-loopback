@@ -40,7 +40,7 @@
         <li>
           <i class="glyphicon glyphicon-trash"
              ng-really-message="Are you sure?"        
-             ng-really-click="deleteComment(comment.id)"></i>
+             ng-really-click="deleteComment(comment.id, $index)"></i>
           <a href="#" editable-text="comment.content" onaftersave="editComment($data, comment.id)">
             {{comment.content}}
           </a>

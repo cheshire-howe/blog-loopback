@@ -102,7 +102,7 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
         .then(function(comment) {
           $scope.newComment = '';
           $scope.commentForm.$setPristine();
-          getComments();
+          $scope.comments.push(comment);
         });
     };
     
@@ -119,7 +119,7 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
         });
     };
     
-    $scope.deleteComment = function(id) {
+    $scope.deleteComment = function(id, index) {
       Post
         .prototype$__destroyById__comments(
         {
@@ -128,7 +128,7 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
         })
         .$promise
         .then(function() {
-          getComments();
+          $scope.comments.splice(index, 1);
         });
     };
     
