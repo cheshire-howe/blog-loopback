@@ -87,6 +87,13 @@
       "principalId": "postAuthor",
       "permission": "ALLOW",
       "property": "__delete__comments"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "commentAuthor",
+      "permission": "ALLOW",
+      "property": "__updateById__comments"
     }
   ],
   "methods": []
