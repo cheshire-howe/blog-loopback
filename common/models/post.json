@@ -84,7 +84,7 @@
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "$owner",
+      "principalId": "postAuthor",
       "permission": "ALLOW",
       "property": "__delete__comments"
     }
