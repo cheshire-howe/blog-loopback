@@ -192,7 +192,7 @@ blogControllers.controller('PostEditCtrl', ['$rootScope',
         .$promise
         .then(function() {
           $state.go('postDetail', {id: $stateParams.id});
-        })
+        });
       /*$scope.newPost.$save(function () {
         $state.go('postDetail', {id: $stateParams.id});
       });*/
