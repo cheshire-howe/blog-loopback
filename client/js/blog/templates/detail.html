@@ -5,7 +5,7 @@
     <div class="user">
       <p>Posted by: {{post.user.username}}</p>
     </div>
-    <p ng-if="isLoggedIn">
+    <p ng-if="userId === post.userId">
       <a ui-sref="postEdit({id: post.id})">Edit</a> | 
       <a ng-really-message="Are You Sure?"
          ng-really-click="deletePost()">
@@ -40,13 +40,23 @@
     <div class="comments" ng-if="isLoggedIn">
       <h2>Comments</h2>
       <ul ng-repeat="comment in comments">
-        <li>
-          <i class="glyphicon glyphicon-trash"
-             ng-really-message="Are you sure?"        
-             ng-really-click="deleteComment(comment.id, $index)"></i>
-          <a href="#" editable-text="comment.content" onaftersave="editComment($data, comment.id, $index)">
-            {{comment.content}}
-          </a>
+        <li class="col-xs-12">
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="panel panel-primary">
+                <div class="panel-body">
+                  
+                  <a href="#" editable-text="comment.content" onaftersave="editComment($data, comment.id, $index)">
+                    {{comment.content}}
+                  </a>
+                  <i class="glyphicon glyphicon-trash pull-right"
+                     ng-if="userId === comment.userId"          
+                     ng-really-message="Are you sure?"        
+                     ng-really-click="deleteComment(comment.id, $index)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
         </li>
       </ul>
       <ul ng-if="comments.length === 0">

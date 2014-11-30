@@ -118,6 +118,12 @@ p{
   border: none;
 }
 
+.panel-primary {
+  color:#454242;
+  background-color:#F4C997;
+  border: none;
+}
+
 /* Comments */
 .comments ul li {
   list-style: none;
