@@ -2,10 +2,13 @@
   <div class="row">
     <h1>{{post.title}}</h1>
     <div class="blog-content">{{post.content}}</div>
+    <div class="user">
+      <p>Posted by: {{post.user.username}}</p>
+    </div>
     <p ng-if="isLoggedIn">
       <a ui-sref="postEdit({id: post.id})">Edit</a> | 
       <a ng-really-message="Are You Sure?"
-         ng-really-click="deletePost('{{post.id}}')">
+         ng-really-click="deletePost()">
         Delete
       </a>
     </p>

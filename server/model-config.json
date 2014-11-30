@@ -33,7 +33,7 @@
   },
   "Comment": {
     "dataSource": "blog-loopback-mongo",
-    "public": false
+    "public": true
   },
   "user": {
     "dataSource": "blog-loopback-mongo",

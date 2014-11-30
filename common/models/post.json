@@ -36,7 +36,8 @@
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$everyone",
-      "permission": "ALLOW"
+      "permission": "ALLOW",
+      "property": "__get__comments"
     },
     {
       "accessType": "READ",
@@ -53,11 +54,39 @@
       "property": "findById"
     },
     {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "findOne"
+    },
+    {
       "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "create"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "__create__comments"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "destroyById"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "__delete__comments"
     }
   ],
   "methods": []

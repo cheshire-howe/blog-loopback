@@ -20,8 +20,13 @@ blogControllers.controller('PostCtrl', ['$rootScope',
     };
     
     $scope.posts = [];
+    var filter = {
+      filter: {
+        include: 'user'
+      }
+    };
     Post
-      .find()
+      .find(filter)
       .$promise
       .then(function(results) {
         $scope.posts = results;
@@ -60,8 +65,9 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
                                               '$stateParams',
                                               '$state',
                                               'Post',
+                                              'Comment',
                                               'User',
-  function($rootScope, $scope, $stateParams, $state, Post, User) {
+  function($rootScope, $scope, $stateParams, $state, Post, Comment, User) {
     User.getCurrent()
       .$promise
       .then(function(user) {
@@ -71,27 +77,40 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
         $rootScope.isLoggedIn = false;
       });
     
-    $scope.post = Post.get({id: $stateParams.id});
-    
-    function getComments() {
-      $scope.comments = Post.prototype$__get__comments({
+    $scope.post = Post.findOne({
+      filter: {
+        where: {id: $stateParams.id},
+        include: 'user'
+      }
+    }, function() {
+      $scope.comments = Post.comments({
         id: $stateParams.id
       });
-    }
-    getComments();
+    });
     
-    $scope.deletePost = function(id) {
+    $scope.deletePost = function() {
       Post
-        .deleteById({ id: id })
+        .comments.destroyAll({
+          id: $scope.post.id
+        })
         .$promise
         .then(function() {
-          $state.go('blog');
+          User
+            .posts.destroyById(
+              {
+                id: $scope.userId,
+                fk: $scope.post.id
+              })
+            .$promise
+            .then(function() {
+              $state.go('blog');
+            });
         });
     };
 
     $scope.addComment = function() {
       Post
-        .prototype$__create__comments(
+        .comments.create(
           { id: $scope.post.id },
           {
             content: $scope.newComment.content,
@@ -120,11 +139,11 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
     };
     
     $scope.deleteComment = function(id, index) {
-      Post
-        .prototype$__destroyById__comments(
+      User
+        .comments.destroyById(
         {
           fk: id,
-          id: $scope.post.id
+          id: $scope.userId
         })
         .$promise
         .then(function() {
@@ -152,10 +171,24 @@ blogControllers.controller('PostEditCtrl', ['$rootScope',
     
     $scope.newPost = Post.get({id: $stateParams.id});
     
-    $scope.editPost = function() {
-      $scope.newPost.$save(function () {
+    $scope.editPost = function(data) {
+      User
+        .posts.updateById(
+        {
+          id: $scope.userId,
+          fk: $stateParams.id
+        },
+        {
+          title: data.title,
+          content: data.content
+        })
+        .$promise
+        .then(function() {
+          $state.go('postDetail', {id: $stateParams.id});
+        })
+      /*$scope.newPost.$save(function () {
         $state.go('postDetail', {id: $stateParams.id});
-      });
+      });*/
     };
   }]);
 
@@ -176,6 +209,7 @@ blogControllers.controller('UserRegisterCtrl', ['$rootScope',
     
     $scope.register = function() {
       var user = {
+        username: $scope.newUser.username,
         email: $scope.newUser.email,
         password: $scope.newUser.password
       };
@@ -186,6 +220,9 @@ blogControllers.controller('UserRegisterCtrl', ['$rootScope',
           User.login(user, function() {
             $state.go('blog');
           });
+        }, function(err) {
+        console.log(err);
+          $scope.error = err.data.error.message;
         });
     };
   }]);
