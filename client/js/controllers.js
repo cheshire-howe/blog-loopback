@@ -125,16 +125,23 @@ blogControllers.controller('PostDetailCtrl', ['$rootScope',
         });
     };
     
-    $scope.editComment = function(data, id) {
-      Post
-        .prototype$__updateById__comments(
+    $scope.editComment = function(data, id, index) {
+      User
+        .comments.updateById(
         {
           fk: id,
-          id: $scope.post.id
+          id: $scope.userId
         },
         {
-          content: data,
-          userId: $scope.userId
+          content: data
+        })
+        .$promise
+        .then(function() {
+          // all good
+        }, function(err) {
+          // on fail, update the client model to match the
+          // server model
+          $scope.comments[index] = Comment.findById({id: id});
         });
     };
     
