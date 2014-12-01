@@ -14,11 +14,13 @@
     "compression": "^1.0.3",
     "debug": "^2.1.0",
     "errorhandler": "^1.1.1",
+    "ipware": "0.0.2",
     "loopback": "^2.5.0",
     "loopback-boot": "^2.2.0",
     "loopback-connector-mongodb": "^1.4.4",
     "loopback-datasource-juggler": "^2.7.0",
-    "serve-favicon": "^2.0.1"
+    "serve-favicon": "^2.0.1",
+    "winston": "^0.8.3"
   },
   "optionalDependencies": {
     "loopback-explorer": "^1.1.0"
