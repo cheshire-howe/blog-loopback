@@ -22,7 +22,12 @@ blogControllers.controller('PostCtrl', ['$rootScope',
     $scope.posts = [];
     var filter = {
       filter: {
-        include: 'user'
+        include: {
+          relation: 'user',
+          scope: {
+            fields: ['username']
+          }
+        }
       }
     };
     Post
