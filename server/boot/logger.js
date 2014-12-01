@@ -9,7 +9,7 @@ winston.add(winston.transports.File, {
 module.exports = function(server) {
   server.use(function(req, res, next) {
     var ipInfo = getIp(req);
-    winston.info(ipInfo);
+    winston.info({request: req.url}, ipInfo);
     next();
   });
 };
