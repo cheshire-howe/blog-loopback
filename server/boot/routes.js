@@ -32,5 +32,5 @@ module.exports = function(app) {
     res.end();
   });
   
-  app.use(router);
+  //app.use(router);
 };

@@ -10,8 +10,8 @@ app.use(loopback.favicon());
 app.use(loopback.compress());
 
 // -- Add your pre-processing middleware here --
-var bodyparser = require('body-parser');
-app.use(bodyparser.json({ extended: true }));
+//var bodyparser = require('body-parser');
+//app.use(bodyparser.json({ extended: true }));
 
 // boot scripts mount components like REST API
 boot(app, __dirname);
@@ -25,7 +25,7 @@ app.use(loopback.static(path.resolve(__dirname, '../client')));
 
 // If static file isn't found, it's an html5 route
 app.all('/*', function(req, res, next) {
-  if (req.url === '/login' || req.url === '/logout') return next();
+  //if (req.url === '/login' || req.url === '/logout') return next();
   res.sendFile('index.html', { 
     root: __dirname + '/../client'
   });
