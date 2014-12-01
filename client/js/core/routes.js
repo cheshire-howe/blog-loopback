@@ -1,8 +1,6 @@
 (function() {
   'use strict';
   
-  var routes = angular.module('blogApp.core.routes', ['ui.router']);
-  
   /**
    * @ngDoc module
    * @description
@@ -10,7 +8,8 @@
    * Initializes routes and controllers.
    * Also configures html5 mode
    */
-  routes.config([
+  angular.module('blogApp.core.routes', ['ui.router'])
+  .config([
     '$stateProvider',
     '$urlRouterProvider',
     '$locationProvider',
@@ -19,12 +18,14 @@
         .state('blog', {
           url: '/',
           templateUrl: 'js/blog/templates/posts.html',
-          controller: 'PostCtrl'
+          controller: 'PostCtrl',
+          controllerAs: 'Posts'
         })
         .state('postCreate', {
           url: '/Post/create',
           templateUrl: 'js/blog/templates/create.html',
-          controller: 'PostCreateCtrl'
+          controller: 'PostCreateCtrl',
+          controllerAs: 'PostCreate'
         })
         .state('postDetail', {
           url: '/Post/:id',

@@ -14,74 +14,102 @@
   /**
    * @ngDoc overview
    * @name PostCtrl
-   * @module
    * @description
    *
    * This lists all the posts in the database
    */
   postCtrls.controller('PostCtrl', PostCtrl);
-  PostCtrl.$inject = ['$rootScope', '$scope', 'Post', 'User'];
+  PostCtrl.$inject = ['$rootScope', 'Post', 'User'];
 
-  function PostCtrl($rootScope, $scope, Post, User) {
-    User.getCurrent()
-      .$promise
-      .then(function() {
-        $rootScope.isLoggedIn = true;
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  function PostCtrl($rootScope, Post, User) {
+    
+    // declare variables in this scope
+    var vm = this;
+    vm.posts = [];
+    vm.collapse = collapse;
+    vm.userId = '';
+    
+    getCurrentUser();
+    getPosts();
 
-    $scope.collapse = function() {
+    // collapses bootstrap navbar 
+    function collapse() {
       $rootScope.isCollapsed = true;
     };
+    
+    // gets current user info to set view permissions
+    function getCurrentUser() {
+      User.getCurrent()
+        .$promise
+        .then(function(user) {
+          $rootScope.isLoggedIn = true;
+          vm.userId = user.id;
+        }, function() {
+          $rootScope.isLoggedIn = false;
+        });
+    }
 
-    $scope.posts = [];
-    var filter = {
-      filter: {
-        include: {
-          relation: 'user',
-          scope: {
-            fields: ['username']
+    // gets an array of posts
+    function getPosts() {
+      var filter = {
+        filter: {
+          include: {
+            relation: 'user',
+            scope: {
+              fields: ['username']
+            }
           }
         }
-      }
-    };
-    Post
-      .find(filter)
-      .$promise
-      .then(function(results) {
-        $scope.posts = results;
-      });
+      };
+      Post
+        .find(filter)
+        .$promise
+        .then(function(results) {
+          vm.posts = results;
+        });
+    }
+    
   }
 
   /**
    * @ngDoc overview
    * @name PostCreateCtrl
-   * @module
    * @description
    *
    * Creation of a post is made possible
    */
   postCtrls.controller('PostCreateCtrl', PostCreateCtrl);
-  PostCreateCtrl.$inject = ['$rootScope', '$scope', '$state',
+  PostCreateCtrl.$inject = ['$rootScope', '$state',
                             'Post', 'User'];
-  function PostCreateCtrl($rootScope, $scope, $state, Post, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  function PostCreateCtrl($rootScope, $state, Post, User) {
+    
+    // declare variables in scope
+    var vm = this;
+    vm.addPost = addPost;
+    vm.newPost = vm.newPost || {};
+    
+    getCurrentUser();
+    
+    // gets current user info to set view permissions
+    function getCurrentUser() {
+      User.getCurrent()
+        .$promise
+        .then(function(user) {
+          $rootScope.isLoggedIn = true;
+          vm.userId = user.id;
+        }, function() {
+          $rootScope.isLoggedIn = false;
+        });
+    }
 
-    $scope.addPost = function() {
-      $scope.newPost.userId = $scope.userId;
+    // add the post to the database
+    function addPost() {
+      vm.newPost.userId = vm.userId;
       Post
-        .create($scope.newPost)
+        .create(vm.newPost)
         .$promise
         .then(function(post) {
-          $scope.postForm.$setPristine();
+          vm.postForm.$setPristine();
           $state.go('blog');
         });
     };
