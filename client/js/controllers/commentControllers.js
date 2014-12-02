@@ -3,23 +3,18 @@
 
   /**
    * @ngDoc overview
-   * @name blogApp.postCtrls
-   * @module
-   * @description
-   *
-   * These are the controllers for blog posts
-   */
-  var commentCtrls = angular.module('blogApp.controllers.commentCtrls',
-                                 ['lbServices']);
-  
-  /**
-   * @ngDoc overview
    * @name CommentCtrl
    * @description
    *
    * Controller for CRUD methods of comments
+   *
+   * This controller handles all the methods of comments and hooks
+   * into the comments.html view which is a child of postDetail
    */
-  commentCtrls.controller('CommentCtrl', CommentCtrl);
+  angular.module('blogApp.controllers.commentCtrls', ['lbServices'])
+    .controller('CommentCtrl', CommentCtrl);
+  
+  
   CommentCtrl.$inject = ['$stateParams', 'Post', 'Comment', 'User'];
   
   function CommentCtrl($stateParams, Post, Comment, User) {
@@ -38,7 +33,7 @@
       });
     }
 
-    // send POST request to add comment
+    // adds a comment through the post model
     function addComment() {
       Post
         .comments.create(
@@ -57,7 +52,8 @@
         });
     }
 
-    // xeditable calls this method to edit comment
+    // xeditable calls this method to edit comment through the
+    // current user
     function editComment(data, id, index) {
       User
         .comments.updateById(
@@ -69,18 +65,15 @@
           content: data
         })
         .$promise
-        // if comment belongs to user do nothing,
-        // if not, revert
         .then(function() {
-          // all good
+          // comment belongs to user so do nothing,
         }, function(err) {
-          // on fail, update the client model to match the
-          // server model
+          // on fail(404), update the client model to match the server model
           vm.comments[index] = Comment.findById({id: id});
         });
     }
 
-    // delete a comment and remove from screen
+    // delete a comment through the current user and remove from screen
     function deleteComment(id, index) {
       User
         .comments.destroyById(

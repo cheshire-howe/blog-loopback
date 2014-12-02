@@ -1,32 +1,33 @@
 <h1>Login!</h1>
 <hr>
-<p ng-if="loginFail" class="has-error">Login Failed!</p>
-<form name="loginForm" novalidate ng-submit="login()">
+<p ng-if="Login.loginFail" class="alert alert-danger">Login Failed!</p>
+<form name="Login.loginForm" novalidate ng-submit="Login.login()">
   <div class="form-group"
-       ng-class="{'has-error': loginForm.email.$invalid
-         && loginForm.email.$dirty}">
+       ng-class="{'has-error': Login.loginForm.email.$invalid
+         && Login.loginForm.email.$dirty}">
     <input type="text" class="form-control" name="email"
            placeholder="Email..." autocomplete="on" required
-           ng-model="user.email">
+           ng-model="Login.user.email">
     <span class="has-error control-label"
-          ng-show="loginForm.email.$invalid && loginForm.email.$dirty">
+          ng-show="Login.loginForm.email.$invalid
+          && Login.loginForm.email.$dirty">
       Email is required
     </span>
   </div>
   <div class="form-group"
-       ng-class="{'has-error': loginForm.password.$invalid
-         && loginForm.password.$dirty}">
+       ng-class="{'has-error': Login.loginForm.password.$invalid
+         && Login.loginForm.password.$dirty}">
     <input type="password" class="form-control" name="password"
              placeholder="Password..."               
              autocomplete="off" required rows="12"
-             ng-model="user.password">
+             ng-model="Login.user.password">
     <span class="has-error control-label"
-          ng-show="loginForm.password.$invalid 
-            && loginForm.password.$dirty">
+          ng-show="Login.loginForm.password.$invalid 
+            && Login.loginForm.password.$dirty">
       Password is required
     </span>
   </div>
-  <button class="btn btn-primary" ng-disabled="loginForm.$invalid">
+  <button class="btn btn-primary" ng-disabled="Login.loginForm.$invalid">
     Login
   </button>
 </form>

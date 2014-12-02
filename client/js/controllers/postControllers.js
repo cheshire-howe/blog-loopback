@@ -9,8 +9,12 @@
    *
    * These are the controllers for blog posts
    */
-  var postCtrls = angular.module('blogApp.controllers.postCtrls',
-                                 ['lbServices']);
+  angular.module('blogApp.controllers.postCtrls', ['lbServices'])
+  
+    .controller('PostCtrl', PostCtrl)
+    .controller('PostCreateCtrl', PostCreateCtrl)
+    .controller('PostDetailCtrl', PostDetailCtrl)
+    .controller('PostEditCtrl', PostEditCtrl);
   
   /**
    * @ngDoc overview
@@ -19,33 +23,21 @@
    *
    * This lists all the posts in the database
    */
-  postCtrls.controller('PostCtrl', PostCtrl);
   PostCtrl.$inject = ['$rootScope', 'Post', 'User'];
 
   function PostCtrl($rootScope, Post, User) {
     
     // declare variables in this scope
     var vm = this;
-    vm.userId = '';
+    vm.userId = $rootScope.utils.getCurrentUser();
     vm.posts = [];
     vm.collapse = collapse;
     
-    getCurrentUser();
     getPosts();
 
     // collapses bootstrap navbar 
     function collapse() {
       $rootScope.isCollapsed = true;
-    }
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
     }
 
     // gets an array of posts
@@ -77,28 +69,15 @@
    *
    * Creation of a post is made possible
    */
-  postCtrls.controller('PostCreateCtrl', PostCreateCtrl);
-  PostCreateCtrl.$inject = ['$rootScope', '$state',
-                            'Post', 'User'];
+  PostCreateCtrl.$inject = ['$rootScope', '$state', 'Post', 'User'];
+  
   function PostCreateCtrl($rootScope, $state, Post, User) {
     
     // declare variables in scope
     var vm = this;
-    vm.userId = '';
+    vm.userId = $rootScope.utils.getCurrentUser();
     vm.addPost = addPost;
     vm.newPost = vm.newPost || {};
-    
-    getCurrentUser();
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
 
     // add the post to the database
     function addPost() {
@@ -116,13 +95,11 @@
   /**
    * @ngDoc overview
    * @name PostDetailsCtrl
-   * @module
    * @description
    *
    * Shows the details of a post and enable edit or delete
    * for the user who wrote it
    */
-  postCtrls.controller('PostDetailCtrl', PostDetailCtrl);
   PostDetailCtrl.$inject = ['$rootScope', '$stateParams', '$state',
                             'Post', 'Comment', 'User'];
                             
@@ -131,21 +108,9 @@
     
     $state.transitionTo('postDetail.comments', $stateParams);
     var vm = this;
-    vm.userId = '';
+    vm.userId = $rootScope.utils.getCurrentUser();
     vm.post = getPost();
     vm.deletePost = deletePost;
-    
-    getCurrentUser();
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
 
     // get the post in question
     function getPost() {
@@ -166,12 +131,18 @@
     // delete this post and all related comments
     function deletePost() {
       Post
+        // try to destroy all comments first. Backend is set up so
+        // that if a user who is not the owner of this post tries
+        // to delete all comments this will fail, causing the entire
+        // function to fail
         .comments.destroyAll({
           id: vm.post.id
         })
         .$promise
         .then(function() {
           User
+            // on successful destruction of comments, the post can now
+            // be removed from the database through the owning user
             .posts.destroyById(
               {
                 id: vm.userId,
@@ -187,34 +158,20 @@
   
   /**
    * @ngDoc overview
-   * @name PostCtrl
-   * @module
+   * @name PostEditCtrl
    * @description
    *
    * Methods for editing a post
    */
-  postCtrls.controller('PostEditCtrl', PostEditCtrl);
   PostEditCtrl.$inject = ['$rootScope', '$scope', '$stateParams',
                           '$state', 'Post', 'User'];
 
   function PostEditCtrl($rootScope, $scope, $stateParams, $state, Post, User) {
     
     var vm = this;
-    vm.userId = '';
+    vm.userId = $rootScope.utils.getCurrentUser();
     vm.newPost = getPost();
     vm.editPost = editPost;
-    
-    getCurrentUser();
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
 
     // get the post to be edited from db
     function getPost() {

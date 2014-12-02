@@ -1,4 +1,4 @@
 node_modules/
 client/vendor/
 gitcommit.txt
-logger.log
+logger*.log

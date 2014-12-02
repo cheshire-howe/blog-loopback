@@ -1,60 +1,60 @@
 <h1>Sign Up!</h1>
 <hr>
-<div ng-if="error" class="alert alert-danger">
-  <small>{{error}}</small>
+<div ng-if="Register.error" class="alert alert-danger">
+  <small>{{Register.error}}</small>
 </div>
-<form name="registrationForm" novalidate ng-submit="register()">
+<form name="Register.registrationForm" novalidate ng-submit="Register.register()">
   <div class="form-group"
-       ng-class="{'has-error': registrationForm.username.$invalid
-         && registrationForm.username.$dirty}">
+       ng-class="{'has-error': Register.registrationForm.username.$invalid
+         && Register.registrationForm.username.$dirty}">
     <input type="text" class="form-control" name="username"
            placeholder="Username..." autocomplete="off" required
-           ng-model="newUser.username">
+           ng-model="Register.newUser.username">
     <span class="has-error control-label"
-          ng-show="registrationForm.username.$invalid && registrationForm.username.$dirty">
+          ng-show="Register.registrationForm.username.$invalid && Register.registrationForm.username.$dirty">
       Username is required
     </span>
   </div>
   <div class="form-group"
-       ng-class="{'has-error': registrationForm.email.$invalid
-         && registrationForm.email.$dirty}">
+       ng-class="{'has-error': Register.registrationForm.email.$invalid
+         && Register.registrationForm.email.$dirty}">
     <input type="email" class="form-control" name="email"
            placeholder="Email..." autocomplete="off" required
-           ng-model="newUser.email">
+           ng-model="Register.newUser.email">
     <span class="has-error control-label"
-          ng-show="registrationForm.email.$invalid && registrationForm.email.$dirty">
+          ng-show="Register.registrationForm.email.$invalid && Register.registrationForm.email.$dirty">
       Email is required
     </span>
   </div>
   <div class="form-group"
-       ng-class="{'has-error': registrationForm.password.$invalid
-         && registrationForm.password.$dirty}">
+       ng-class="{'has-error': Register.registrationForm.password.$invalid
+         && Register.registrationForm.password.$dirty}">
     <input type="password" class="form-control"
            name="password" placeholder="Password..."               
            autocomplete="off" required rows="12"
-           ng-model="newUser.password">
+           ng-model="Register.newUser.password">
     <span class="has-error control-label"
-          ng-show="registrationForm.password.$invalid 
-            && registrationForm.password.$dirty">
+          ng-show="Register.registrationForm.password.$invalid 
+            && Register.registrationForm.password.$dirty">
       Password is required
     </span>
   </div>
   <div class="form-group"
-       ng-class="{'has-error': registrationForm.confirmPassword.$invalid
-         && registrationForm.confirmPassword.$dirty}">
+       ng-class="{'has-error': Register.registrationForm.confirmPassword.$invalid
+         && Register.registrationForm.confirmPassword.$dirty}">
     <input type="password" class="form-control" 
            name="confirmPassword" placeholder="Password Confirmation..."               
            autocomplete="off" required rows="12"
-           ng-model="newUser.confirmPassword"
-           compare-to="newUser.password">
+           ng-model="Register.newUser.confirmPassword"
+           compare-to="Register.newUser.password">
     <span class="has-error control-label"
-          ng-show="registrationForm.confirmPassword.$invalid 
-            && registrationForm.confirmPassword.$error 
-            && registrationForm.confirmPassword.$dirty">
+          ng-show="Register.registrationForm.confirmPassword.$invalid 
+            && Register.registrationForm.confirmPassword.$error 
+            && Register.registrationForm.confirmPassword.$dirty">
       Password must match
     </span>
   </div>
-  <button class="btn btn-primary" ng-disabled="registrationForm.$invalid">
+  <button class="btn btn-primary" ng-disabled="Register.registrationForm.$invalid">
     Sign Up
   </button>
 </form>

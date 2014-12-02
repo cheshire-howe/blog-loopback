@@ -1,29 +1,43 @@
 (function() {
   'use strict';
   
-  var userCtrls = angular.module('blogApp.controllers.userCtrls',
-                                 ['lbServices']);
+  /**
+   * @ngDoc overview
+   * @name blogApp.userCtrls
+   * @module
+   * @description
+   *
+   * These are the controllers for registering, logging in
+   * and logging out users
+   */
+  angular.module('blogApp.controllers.userCtrls', ['lbServices'])
   
-  userCtrls.controller('UserRegisterCtrl', UserRegisterCtrl);
-  UserRegisterCtrl.$inject = ['$rootScope', '$scope', '$state',
-                              'User'];
+    .controller('UserRegisterCtrl', UserRegisterCtrl)
+    .controller('UserLoginCtrl', UserLoginCtrl)
+    .controller('UserLogoutCtrl', UserLogoutCtrl);
   
-  function UserRegisterCtrl($rootScope, $scope, $state, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-        $state.go('blog');
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  /**
+   * @ngDoc overview
+   * @name UserRegisterCtrl
+   * @description
+   *
+   * Register a new user
+   */
+  UserRegisterCtrl.$inject = ['$rootScope', '$state', 'User'];
+  
+  function UserRegisterCtrl($rootScope, $state, User) {
+    
+    var vm = this;
+    vm.userId = $rootScope.utils.getCurrentUser();
+    vm.newUser = {};
+    vm.error = '';
+    vm.register = register;
 
-    $scope.register = function() {
+    function register() {
       var user = {
-        username: $scope.newUser.username,
-        email: $scope.newUser.email,
-        password: $scope.newUser.password
+        username: vm.newUser.username,
+        email: vm.newUser.email,
+        password: vm.newUser.password
       };
       User
         .create(user)
@@ -34,42 +48,50 @@
           });
         }, function(err) {
         console.log(err);
-          $scope.error = err.data.error.message;
+          vm.error = err.data.error.message;
         });
-    };
+    }
   }
 
-  userCtrls.controller('UserLoginCtrl', UserLoginCtrl);
-  UserLoginCtrl.$inject = ['$rootScope', '$scope', '$state',
-                           'User'];
+  /**
+   * @ngDoc overview
+   * @name UserLoginCtrl
+   * @description
+   *
+   * Login an existing user
+   */
+  UserLoginCtrl.$inject = ['$rootScope', '$state', 'User'];
   
-  function UserLoginCtrl($rootScope, $scope, $state, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-        $state.go('blog');
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  function UserLoginCtrl($rootScope, $state, User) {
+    
+    var vm = this;
+    vm.userId = $rootScope.utils.getCurrentUser();
+    vm.user = {};
+    vm.loginFail = false;
+    vm.login = login;
 
-    $scope.login = function() {
+    function login() {
       User.login({
-        email: $scope.user.email,
-        password: $scope.user.password
+        email: vm.user.email,
+        password: vm.user.password
       })
       .$promise
       .then(function() {
-        $scope.loginFail = false;
+        vm.loginFail = false;
         $state.go('blog');
       }, function(err) {
-        $scope.loginFail = true;
+        vm.loginFail = true;
       });
-    };
+    }
   }
 
-  userCtrls.controller('UserLogoutCtrl', UserLogoutCtrl);
+  /**
+   * @ngDoc overview
+   * @name UserLogoutCtrl
+   * @description
+   *
+   * Logout a currently logged in user
+   */
   UserLogoutCtrl.$inject = ['$state', 'User'];
   
   function UserLogoutCtrl($state, User) {

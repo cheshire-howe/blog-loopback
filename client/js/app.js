@@ -7,6 +7,7 @@
     'blogApp.controllers.postCtrls',
     'blogApp.controllers.userCtrls',
     'blogApp.controllers.commentCtrls',
+    'blogApp.services.utils',
     'blogApp.directives',
     'ui.bootstrap'
   ]);
