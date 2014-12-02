@@ -31,7 +31,7 @@ module.exports = function(Post) {
     accepts: [
       {arg: 'id', type: 'string', required: true}
     ],
-    returns: {arg: 'post', type: 'array'},
+    returns: {arg: 'post', type: 'object'},
     http: {path: '/:id/findSingle', verb: 'get'}
   });
 };
