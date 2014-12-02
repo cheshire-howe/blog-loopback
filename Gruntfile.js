@@ -85,7 +85,7 @@ module.exports = function(grunt) {
       services: {
         options: {
           input: './server/server.js',
-          output: './client/js/lb-services.js'
+          output: './client/js/services/lb-services.js'
         }
       }
     },

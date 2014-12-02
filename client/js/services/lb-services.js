@@ -430,6 +430,75 @@ module.factory(
           method: "PUT"
         },
 
+        /**
+         * @ngdoc method
+         * @name lbServices.Post#findAll
+         * @methodOf lbServices.Post
+         *
+         * @description
+         *
+         * <em>
+         * (The remote method definition does not provide any description.)
+         * </em>
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `posts` – `{array=}` - 
+         */
+        "findAll": {
+          url: urlBase + "/Posts/findAll",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Post#findSingle
+         * @methodOf lbServices.Post
+         *
+         * @description
+         *
+         * <em>
+         * (The remote method definition does not provide any description.)
+         * </em>
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{string}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `post` – `{array=}` - 
+         */
+        "findSingle": {
+          url: urlBase + "/Posts/:id/findSingle",
+          method: "GET"
+        },
+
         // INTERNAL. Use Comment.post() instead.
         "::get::Comment::post": {
           url: urlBase + "/Comments/:id/post",

@@ -3,23 +3,18 @@
 
   /**
    * @ngDoc overview
-   * @name blogApp.postCtrls
-   * @module
-   * @description
-   *
-   * These are the controllers for blog posts
-   */
-  var commentCtrls = angular.module('blogApp.controllers.commentCtrls',
-                                 ['lbServices']);
-  
-  /**
-   * @ngDoc overview
    * @name CommentCtrl
    * @description
    *
    * Controller for CRUD methods of comments
+   *
+   * This controller handles all the methods of comments and hooks
+   * into the comments.html view which is a child of postDetail
    */
-  commentCtrls.controller('CommentCtrl', CommentCtrl);
+  angular.module('blogApp.controllers.commentCtrls', ['lbServices'])
+    .controller('CommentCtrl', CommentCtrl);
+  
+  
   CommentCtrl.$inject = ['$stateParams', 'Post', 'Comment', 'User'];
   
   function CommentCtrl($stateParams, Post, Comment, User) {
@@ -38,7 +33,7 @@
       });
     }
 
-    // send POST request to add comment
+    // adds a comment through the post model
     function addComment() {
       Post
         .comments.create(
@@ -57,7 +52,8 @@
         });
     }
 
-    // xeditable calls this method to edit comment
+    // xeditable calls this method to edit comment through the
+    // current user
     function editComment(data, id, index) {
       User
         .comments.updateById(
@@ -69,18 +65,15 @@
           content: data
         })
         .$promise
-        // if comment belongs to user do nothing,
-        // if not, revert
         .then(function() {
-          // all good
+          // comment belongs to user so do nothing,
         }, function(err) {
-          // on fail, update the client model to match the
-          // server model
+          // on fail(404), update the client model to match the server model
           vm.comments[index] = Comment.findById({id: id});
         });
     }
 
-    // delete a comment and remove from screen
+    // delete a comment through the current user and remove from screen
     function deleteComment(id, index) {
       User
         .comments.destroyById(
@@ -107,8 +100,12 @@
    *
    * These are the controllers for blog posts
    */
-  var postCtrls = angular.module('blogApp.controllers.postCtrls',
-                                 ['lbServices']);
+  angular.module('blogApp.controllers.postCtrls', ['lbServices'])
+  
+    .controller('PostCtrl', PostCtrl)
+    .controller('PostCreateCtrl', PostCreateCtrl)
+    .controller('PostDetailCtrl', PostDetailCtrl)
+    .controller('PostEditCtrl', PostEditCtrl);
   
   /**
    * @ngDoc overview
@@ -117,52 +114,31 @@
    *
    * This lists all the posts in the database
    */
-  postCtrls.controller('PostCtrl', PostCtrl);
   PostCtrl.$inject = ['$rootScope', 'Post', 'User'];
 
   function PostCtrl($rootScope, Post, User) {
     
     // declare variables in this scope
     var vm = this;
-    vm.userId = '';
+    vm.userId = $rootScope.utils.getCurrentUser();
     vm.posts = [];
     vm.collapse = collapse;
     
-    getCurrentUser();
     getPosts();
 
     // collapses bootstrap navbar 
     function collapse() {
       $rootScope.isCollapsed = true;
     }
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
 
     // gets an array of posts
     function getPosts() {
-      var filter = {
-        filter: {
-          include: {
-            relation: 'user',
-            scope: {
-              fields: ['username']
-            }
-          }
-        }
-      };
       Post
-        .find(filter)
+        // remote method that returns `posts` array with username
+        .findAll()
         .$promise
         .then(function(results) {
-          vm.posts = results;
+          vm.posts = results.posts;
         });
     }
     
@@ -175,28 +151,15 @@
    *
    * Creation of a post is made possible
    */
-  postCtrls.controller('PostCreateCtrl', PostCreateCtrl);
-  PostCreateCtrl.$inject = ['$rootScope', '$state',
-                            'Post', 'User'];
+  PostCreateCtrl.$inject = ['$rootScope', '$state', 'Post', 'User'];
+  
   function PostCreateCtrl($rootScope, $state, Post, User) {
     
     // declare variables in scope
     var vm = this;
-    vm.userId = '';
+    vm.userId = $rootScope.utils.getCurrentUser();
     vm.addPost = addPost;
     vm.newPost = vm.newPost || {};
-    
-    getCurrentUser();
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
 
     // add the post to the database
     function addPost() {
@@ -214,62 +177,51 @@
   /**
    * @ngDoc overview
    * @name PostDetailsCtrl
-   * @module
    * @description
    *
    * Shows the details of a post and enable edit or delete
    * for the user who wrote it
    */
-  postCtrls.controller('PostDetailCtrl', PostDetailCtrl);
   PostDetailCtrl.$inject = ['$rootScope', '$stateParams', '$state',
-                            'Post', 'Comment', 'User'];
+                            'Post', 'User'];
                             
   function PostDetailCtrl($rootScope, $stateParams, $state,
-                          Post, Comment, User) {
+                          Post, User) {
     
     $state.transitionTo('postDetail.comments', $stateParams);
     var vm = this;
-    vm.userId = '';
-    vm.post = getPost();
+    vm.userId = $rootScope.utils.getCurrentUser();
+    vm.post = {};
     vm.deletePost = deletePost;
-    
-    getCurrentUser();
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
 
+    getPost();
+    
     // get the post in question
     function getPost() {
-      var filter = {
-        filter: {
-          where: {id: $stateParams.id},
-          include: {
-            relation: 'user',
-            scope: {
-              fields: ['username']
-            }
-          }
-        }
-      };
-      return Post.findOne(filter);
+      Post
+        // call remote method to protect user's email
+        .findSingle({id: $stateParams.id})
+        .$promise
+        .then(function(result) {
+          vm.post = result.post;
+        });
     }
 
     // delete this post and all related comments
     function deletePost() {
       Post
+        // try to destroy all comments first. Backend is set up so
+        // that if a user who is not the owner of this post tries
+        // to delete all comments this will fail, causing the entire
+        // function to fail
         .comments.destroyAll({
           id: vm.post.id
         })
         .$promise
         .then(function() {
           User
+            // on successful destruction of comments, the post can now
+            // be removed from the database through the owning user
             .posts.destroyById(
               {
                 id: vm.userId,
@@ -285,38 +237,32 @@
   
   /**
    * @ngDoc overview
-   * @name PostCtrl
-   * @module
+   * @name PostEditCtrl
    * @description
    *
    * Methods for editing a post
    */
-  postCtrls.controller('PostEditCtrl', PostEditCtrl);
   PostEditCtrl.$inject = ['$rootScope', '$scope', '$stateParams',
                           '$state', 'Post', 'User'];
 
   function PostEditCtrl($rootScope, $scope, $stateParams, $state, Post, User) {
     
     var vm = this;
-    vm.userId = '';
-    vm.newPost = getPost();
+    vm.userId = $rootScope.utils.getCurrentUser();
+    vm.newPost = {};
     vm.editPost = editPost;
     
-    getCurrentUser();
-    
-    // gets current user info to set view permissions
-    function getCurrentUser() {
-      // loopback stores userId in localStorage, let's get it
-      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
-        localStorage.getItem('$LoopBack$currentUserId') : '';
-      // use the outcome to set the global isLoggedIn variable
-      if(vm.userId) $rootScope.isLoggedIn = true;
-      else $rootScope.isLoggedIn = false;
-    }
+    getPost();
 
     // get the post to be edited from db
     function getPost() {
-      return Post.get({id: $stateParams.id});
+      Post
+        // call remote method to protect user's email
+        .findSingle({id: $stateParams.id})
+        .$promise
+        .then(function(result) {
+          vm.newPost = result.post;
+        });
     }
 
     // save edited changes with PUT request
@@ -341,29 +287,43 @@
 (function() {
   'use strict';
   
-  var userCtrls = angular.module('blogApp.controllers.userCtrls',
-                                 ['lbServices']);
+  /**
+   * @ngDoc overview
+   * @name blogApp.userCtrls
+   * @module
+   * @description
+   *
+   * These are the controllers for registering, logging in
+   * and logging out users
+   */
+  angular.module('blogApp.controllers.userCtrls', ['lbServices'])
   
-  userCtrls.controller('UserRegisterCtrl', UserRegisterCtrl);
-  UserRegisterCtrl.$inject = ['$rootScope', '$scope', '$state',
-                              'User'];
+    .controller('UserRegisterCtrl', UserRegisterCtrl)
+    .controller('UserLoginCtrl', UserLoginCtrl)
+    .controller('UserLogoutCtrl', UserLogoutCtrl);
   
-  function UserRegisterCtrl($rootScope, $scope, $state, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-        $state.go('blog');
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  /**
+   * @ngDoc overview
+   * @name UserRegisterCtrl
+   * @description
+   *
+   * Register a new user
+   */
+  UserRegisterCtrl.$inject = ['$rootScope', '$state', 'User'];
+  
+  function UserRegisterCtrl($rootScope, $state, User) {
+    
+    var vm = this;
+    vm.userId = $rootScope.utils.getCurrentUser();
+    vm.newUser = {};
+    vm.error = '';
+    vm.register = register;
 
-    $scope.register = function() {
+    function register() {
       var user = {
-        username: $scope.newUser.username,
-        email: $scope.newUser.email,
-        password: $scope.newUser.password
+        username: vm.newUser.username,
+        email: vm.newUser.email,
+        password: vm.newUser.password
       };
       User
         .create(user)
@@ -374,42 +334,50 @@
           });
         }, function(err) {
         console.log(err);
-          $scope.error = err.data.error.message;
+          vm.error = err.data.error.message;
         });
-    };
+    }
   }
 
-  userCtrls.controller('UserLoginCtrl', UserLoginCtrl);
-  UserLoginCtrl.$inject = ['$rootScope', '$scope', '$state',
-                           'User'];
+  /**
+   * @ngDoc overview
+   * @name UserLoginCtrl
+   * @description
+   *
+   * Login an existing user
+   */
+  UserLoginCtrl.$inject = ['$rootScope', '$state', 'User'];
   
-  function UserLoginCtrl($rootScope, $scope, $state, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-        $state.go('blog');
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  function UserLoginCtrl($rootScope, $state, User) {
+    
+    var vm = this;
+    vm.userId = $rootScope.utils.getCurrentUser();
+    vm.user = {};
+    vm.loginFail = false;
+    vm.login = login;
 
-    $scope.login = function() {
+    function login() {
       User.login({
-        email: $scope.user.email,
-        password: $scope.user.password
+        email: vm.user.email,
+        password: vm.user.password
       })
       .$promise
       .then(function() {
-        $scope.loginFail = false;
+        vm.loginFail = false;
         $state.go('blog');
       }, function(err) {
-        $scope.loginFail = true;
+        vm.loginFail = true;
       });
-    };
+    }
   }
 
-  userCtrls.controller('UserLogoutCtrl', UserLogoutCtrl);
+  /**
+   * @ngDoc overview
+   * @name UserLogoutCtrl
+   * @description
+   *
+   * Logout a currently logged in user
+   */
   UserLogoutCtrl.$inject = ['$state', 'User'];
   
   function UserLogoutCtrl($state, User) {
@@ -431,11 +399,19 @@
    * Configuration file
    */
   angular.module('blogApp.core.config', ['xeditable'])
-
-  // sets xeditable to bootstrap 3 theme
-  .run(['editableOptions', function(editableOptions) {
+    .run(coreConfig);
+  
+  
+  coreConfig.$inject = ['$rootScope', 'editableOptions', 'helpers'];
+  
+  function coreConfig($rootScope, editableOptions, helpers) {
+    
+    // sets xeditable to bootstrap 3 theme
     editableOptions.theme = 'bs3';
-  }]);
+    
+    // global helpers
+    $rootScope.utils = helpers;
+  }
 
 })();
 (function() {
@@ -449,59 +425,62 @@
    * Also configures html5 mode
    */
   angular.module('blogApp.core.routes', ['ui.router'])
-  .config([
-    '$stateProvider',
-    '$urlRouterProvider',
-    '$locationProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider) {
-      $stateProvider
-        .state('blog', {
-          url: '/',
-          templateUrl: 'js/blog/templates/posts.html',
-          controller: 'PostCtrl',
-          controllerAs: 'Posts'
-        })
-        .state('postCreate', {
-          url: '/Post/create',
-          templateUrl: 'js/blog/templates/create.html',
-          controller: 'PostCreateCtrl',
-          controllerAs: 'PostCreate'
-        })
-        .state('postDetail', {
-          url: '/Post/:id',
-          templateUrl: 'js/blog/templates/detail.html',
-          controller: 'PostDetailCtrl',
-          controllerAs: 'PostDetail'
-        })
-        .state('postDetail.comments', {
-          templateUrl: 'js/blog/templates/partials/comments.html',
-          controller: 'CommentCtrl',
-          controllerAs: 'Comments'
-        })
-        .state('postEdit', {
-          url: '/Post/:id/edit',
-          templateUrl: 'js/blog/templates/edit.html',
-          controller: 'PostEditCtrl',
-          controllerAs: 'PostEdit'
-        })
-        .state('register', {
-          url: '/userRegister',
-          templateUrl: 'js/users/templates/register.html',
-          controller: 'UserRegisterCtrl'
-        })
-        .state('login', {
-          url: '/userLogin',
-          templateUrl: 'js/users/templates/login.html',
-          controller: 'UserLoginCtrl'
-        })
-        .state('logout', {
-          url: '/userLogout',
-          controller: 'UserLogoutCtrl'
-        });
-      $urlRouterProvider.otherwise('/');
-      $locationProvider.html5Mode(true);
-    }
-  ]);
+    .config(routeConfig);
+    
+  
+  routeConfig.$inject =  ['$stateProvider', '$urlRouterProvider',
+                          '$locationProvider'];
+  
+  function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
+    $stateProvider
+      .state('blog', {
+        url: '/',
+        templateUrl: 'js/blog/templates/posts.html',
+        controller: 'PostCtrl',
+        controllerAs: 'Posts'
+      })
+      .state('postCreate', {
+        url: '/Post/create',
+        templateUrl: 'js/blog/templates/create.html',
+        controller: 'PostCreateCtrl',
+        controllerAs: 'PostCreate'
+      })
+      .state('postDetail', {
+        url: '/Post/:id',
+        templateUrl: 'js/blog/templates/detail.html',
+        controller: 'PostDetailCtrl',
+        controllerAs: 'PostDetail'
+      })
+      .state('postDetail.comments', {
+        templateUrl: 'js/blog/templates/partials/comments.html',
+        controller: 'CommentCtrl',
+        controllerAs: 'Comments'
+      })
+      .state('postEdit', {
+        url: '/Post/:id/edit',
+        templateUrl: 'js/blog/templates/edit.html',
+        controller: 'PostEditCtrl',
+        controllerAs: 'PostEdit'
+      })
+      .state('register', {
+        url: '/userRegister',
+        templateUrl: 'js/users/templates/register.html',
+        controller: 'UserRegisterCtrl',
+        controllerAs: 'Register'
+      })
+      .state('login', {
+        url: '/userLogin',
+        templateUrl: 'js/users/templates/login.html',
+        controller: 'UserLoginCtrl',
+        controllerAs: 'Login'
+      })
+      .state('logout', {
+        url: '/userLogout',
+        controller: 'UserLogoutCtrl'
+      });
+    $urlRouterProvider.otherwise('/');
+    $locationProvider.html5Mode(true);
+  }
 })();
 /* global confirm */
 (function() {
@@ -973,6 +952,75 @@ module.factory(
         "prototype$updateAttributes": {
           url: urlBase + "/Posts/:id",
           method: "PUT"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Post#findAll
+         * @methodOf lbServices.Post
+         *
+         * @description
+         *
+         * <em>
+         * (The remote method definition does not provide any description.)
+         * </em>
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *   This method does not accept any parameters.
+         *   Supply an empty object or omit this argument altogether.
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `posts` – `{array=}` - 
+         */
+        "findAll": {
+          url: urlBase + "/Posts/findAll",
+          method: "GET"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Post#findSingle
+         * @methodOf lbServices.Post
+         *
+         * @description
+         *
+         * <em>
+         * (The remote method definition does not provide any description.)
+         * </em>
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `id` – `{string}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `post` – `{array=}` - 
+         */
+        "findSingle": {
+          url: urlBase + "/Posts/:id/findSingle",
+          method: "GET"
         },
 
         // INTERNAL. Use Comment.post() instead.
@@ -3914,6 +3962,32 @@ module
 
 (function() {
   'use strict';
+  
+  angular.module('blogApp.services.utils', [])
+    .factory('helpers', helpers);
+  
+  
+  helpers.$inject = ['$rootScope'];
+  
+  function helpers($rootScope) {
+    return {
+      
+      // every controller needs to know who is logged in
+      getCurrentUser: function() {
+        // loopback stores userId in localStorage, let's get it
+        var userId = localStorage.getItem('$LoopBack$currentUserId') ?
+          localStorage.getItem('$LoopBack$currentUserId') : '';
+        // use the outcome to set the global isLoggedIn variable
+        if(userId) $rootScope.isLoggedIn = true;
+        else $rootScope.isLoggedIn = false;
+
+        return userId;
+      }
+    };
+  }
+})();
+(function() {
+  'use strict';
 
   angular.module('blogApp', [
     'blogApp.core.config',
@@ -3921,6 +3995,7 @@ module
     'blogApp.controllers.postCtrls',
     'blogApp.controllers.userCtrls',
     'blogApp.controllers.commentCtrls',
+    'blogApp.services.utils',
     'blogApp.directives',
     'ui.bootstrap'
   ]);

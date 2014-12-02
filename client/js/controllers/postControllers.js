@@ -42,21 +42,12 @@
 
     // gets an array of posts
     function getPosts() {
-      var filter = {
-        filter: {
-          include: {
-            relation: 'user',
-            scope: {
-              fields: ['username']
-            }
-          }
-        }
-      };
       Post
-        .find(filter)
+        // remote method that returns `posts` array with username
+        .findAll()
         .$promise
         .then(function(results) {
-          vm.posts = results;
+          vm.posts = results.posts;
         });
     }
     
@@ -101,31 +92,28 @@
    * for the user who wrote it
    */
   PostDetailCtrl.$inject = ['$rootScope', '$stateParams', '$state',
-                            'Post', 'Comment', 'User'];
+                            'Post', 'User'];
                             
   function PostDetailCtrl($rootScope, $stateParams, $state,
-                          Post, Comment, User) {
+                          Post, User) {
     
     $state.transitionTo('postDetail.comments', $stateParams);
     var vm = this;
     vm.userId = $rootScope.utils.getCurrentUser();
-    vm.post = getPost();
+    vm.post = {};
     vm.deletePost = deletePost;
 
+    getPost();
+    
     // get the post in question
     function getPost() {
-      var filter = {
-        filter: {
-          where: {id: $stateParams.id},
-          include: {
-            relation: 'user',
-            scope: {
-              fields: ['username']
-            }
-          }
-        }
-      };
-      return Post.findOne(filter);
+      Post
+        // call remote method to protect user's email
+        .findSingle({id: $stateParams.id})
+        .$promise
+        .then(function(result) {
+          vm.post = result.post;
+        });
     }
 
     // delete this post and all related comments
@@ -170,12 +158,20 @@
     
     var vm = this;
     vm.userId = $rootScope.utils.getCurrentUser();
-    vm.newPost = getPost();
+    vm.newPost = {};
     vm.editPost = editPost;
+    
+    getPost();
 
     // get the post to be edited from db
     function getPost() {
-      return Post.get({id: $stateParams.id});
+      Post
+        // call remote method to protect user's email
+        .findSingle({id: $stateParams.id})
+        .$promise
+        .then(function(result) {
+          vm.newPost = result.post;
+        });
     }
 
     // save edited changes with PUT request
