@@ -9,7 +9,8 @@
    *
    * These are the controllers for blog posts
    */
-  var postCtrls = angular.module('blogApp.controllers.postCtrls', ['lbServices']);
+  var postCtrls = angular.module('blogApp.controllers.postCtrls',
+                                 ['lbServices']);
   
   /**
    * @ngDoc overview
@@ -25,9 +26,9 @@
     
     // declare variables in this scope
     var vm = this;
+    vm.userId = '';
     vm.posts = [];
     vm.collapse = collapse;
-    vm.userId = '';
     
     getCurrentUser();
     getPosts();
@@ -35,18 +36,16 @@
     // collapses bootstrap navbar 
     function collapse() {
       $rootScope.isCollapsed = true;
-    };
+    }
     
     // gets current user info to set view permissions
     function getCurrentUser() {
-      User.getCurrent()
-        .$promise
-        .then(function(user) {
-          $rootScope.isLoggedIn = true;
-          vm.userId = user.id;
-        }, function() {
-          $rootScope.isLoggedIn = false;
-        });
+      // loopback stores userId in localStorage, let's get it
+      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
+        localStorage.getItem('$LoopBack$currentUserId') : '';
+      // use the outcome to set the global isLoggedIn variable
+      if(vm.userId) $rootScope.isLoggedIn = true;
+      else $rootScope.isLoggedIn = false;
     }
 
     // gets an array of posts
@@ -85,6 +84,7 @@
     
     // declare variables in scope
     var vm = this;
+    vm.userId = '';
     vm.addPost = addPost;
     vm.newPost = vm.newPost || {};
     
@@ -92,14 +92,12 @@
     
     // gets current user info to set view permissions
     function getCurrentUser() {
-      User.getCurrent()
-        .$promise
-        .then(function(user) {
-          $rootScope.isLoggedIn = true;
-          vm.userId = user.id;
-        }, function() {
-          $rootScope.isLoggedIn = false;
-        });
+      // loopback stores userId in localStorage, let's get it
+      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
+        localStorage.getItem('$LoopBack$currentUserId') : '';
+      // use the outcome to set the global isLoggedIn variable
+      if(vm.userId) $rootScope.isLoggedIn = true;
+      else $rootScope.isLoggedIn = false;
     }
 
     // add the post to the database
@@ -112,7 +110,7 @@
           vm.postForm.$setPristine();
           $state.go('blog');
         });
-    };
+    }
   }
 
   /**
@@ -121,114 +119,70 @@
    * @module
    * @description
    *
-   * Shows the details of a post
-   * Comment CRUD actions are in this controller, but this will
-   * be refactored into comment ctrls
+   * Shows the details of a post and enable edit or delete
+   * for the user who wrote it
    */
   postCtrls.controller('PostDetailCtrl', PostDetailCtrl);
-  PostDetailCtrl.$inject = ['$rootScope', '$scope', '$stateParams',
-                            '$state', 'Post', 'Comment', 'User',];
+  PostDetailCtrl.$inject = ['$rootScope', '$stateParams', '$state',
+                            'Post', 'Comment', 'User'];
                             
-  function PostDetailCtrl($rootScope, $scope, $stateParams,
-                          $state, Post, Comment, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+  function PostDetailCtrl($rootScope, $stateParams, $state,
+                          Post, Comment, User) {
+    
+    $state.transitionTo('postDetail.comments', $stateParams);
+    var vm = this;
+    vm.userId = '';
+    vm.post = getPost();
+    vm.deletePost = deletePost;
+    
+    getCurrentUser();
+    
+    // gets current user info to set view permissions
+    function getCurrentUser() {
+      // loopback stores userId in localStorage, let's get it
+      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
+        localStorage.getItem('$LoopBack$currentUserId') : '';
+      // use the outcome to set the global isLoggedIn variable
+      if(vm.userId) $rootScope.isLoggedIn = true;
+      else $rootScope.isLoggedIn = false;
+    }
 
-    // get the post in question, callback to get comments
-    $scope.post = Post.findOne({
-      filter: {
-        where: {id: $stateParams.id},
-        include: 'user'
-      }
-    }, function() {
-      $scope.comments = Post.comments({
-        id: $stateParams.id
-      });
-    });
+    // get the post in question
+    function getPost() {
+      var filter = {
+        filter: {
+          where: {id: $stateParams.id},
+          include: {
+            relation: 'user',
+            scope: {
+              fields: ['username']
+            }
+          }
+        }
+      };
+      return Post.findOne(filter);
+    }
 
-    // delete this post
-    $scope.deletePost = function() {
+    // delete this post and all related comments
+    function deletePost() {
       Post
         .comments.destroyAll({
-          id: $scope.post.id
+          id: vm.post.id
         })
         .$promise
         .then(function() {
           User
             .posts.destroyById(
               {
-                id: $scope.userId,
-                fk: $scope.post.id
+                id: vm.userId,
+                fk: vm.post.id
               })
             .$promise
             .then(function() {
               $state.go('blog');
             });
         });
-    };
-
-    // send POST request to add comment
-    $scope.addComment = function() {
-      Post
-        .comments.create(
-          { id: $scope.post.id },
-          {
-            content: $scope.newComment.content,
-            userId: $scope.userId
-          }
-        )
-        .$promise
-        // reset the comment form and add new comment to list
-        .then(function(comment) {
-          $scope.newComment = '';
-          $scope.commentForm.$setPristine();
-          $scope.comments.push(comment);
-        });
-    };
-
-    // xeditable calls this method to edit comment
-    $scope.editComment = function(data, id, index) {
-      User
-        .comments.updateById(
-        {
-          fk: id,
-          id: $scope.userId
-        },
-        {
-          content: data
-        })
-        .$promise
-        // if comment belongs to user do nothing,
-        // if not, revert
-        .then(function() {
-          // all good
-        }, function(err) {
-          // on fail, update the client model to match the
-          // server model
-          $scope.comments[index] = Comment.findById({id: id});
-        });
-    };
-
-    // delete a comment and remove from screen
-    $scope.deleteComment = function(id, index) {
-      User
-        .comments.destroyById(
-        {
-          fk: id,
-          id: $scope.userId
-        })
-        .$promise
-        .then(function() {
-          $scope.comments.splice(index, 1);
-        });
-    };
-
+    }
   }
   
   /**
@@ -244,24 +198,35 @@
                           '$state', 'Post', 'User'];
 
   function PostEditCtrl($rootScope, $scope, $stateParams, $state, Post, User) {
-    User.getCurrent()
-      .$promise
-      .then(function(user) {
-        $rootScope.isLoggedIn = true;
-        $scope.userId = user.id;
-      }, function() {
-        $rootScope.isLoggedIn = false;
-      });
+    
+    var vm = this;
+    vm.userId = '';
+    vm.newPost = getPost();
+    vm.editPost = editPost;
+    
+    getCurrentUser();
+    
+    // gets current user info to set view permissions
+    function getCurrentUser() {
+      // loopback stores userId in localStorage, let's get it
+      vm.userId = localStorage.getItem('$LoopBack$currentUserId') ?
+        localStorage.getItem('$LoopBack$currentUserId') : '';
+      // use the outcome to set the global isLoggedIn variable
+      if(vm.userId) $rootScope.isLoggedIn = true;
+      else $rootScope.isLoggedIn = false;
+    }
 
     // get the post to be edited from db
-    $scope.newPost = Post.get({id: $stateParams.id});
+    function getPost() {
+      return Post.get({id: $stateParams.id});
+    }
 
     // save edited changes with PUT request
-    $scope.editPost = function(data) {
+    function editPost(data) {
       User
         .posts.updateById(
         {
-          id: $scope.userId,
+          id: vm.userId,
           fk: $stateParams.id
         },
         {
@@ -272,6 +237,6 @@
         .then(function() {
           $state.go('postDetail', {id: $stateParams.id});
         });
-    };
+    }
   }
 })();

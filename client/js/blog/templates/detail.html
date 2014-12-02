@@ -1,76 +1,18 @@
 <div class="container">
   <div class="row">
-    <h1>{{post.title}}</h1>
-    <div class="blog-content">{{post.content}}</div>
+    <h1>{{PostDetail.post.title}}</h1>
+    <div class="blog-content">{{PostDetail.post.content}}</div>
     <div class="user">
-      <p>Posted by: {{post.user.username}}</p>
+      <p>Posted by: {{PostDetail.post.user.username}}</p>
     </div>
-    <p ng-if="userId === post.userId">
-      <a ui-sref="postEdit({id: post.id})">Edit</a> | 
+    <p ng-if="PostDetail.userId === PostDetail.post.userId">
+      <a ui-sref="postEdit({id: PostDetail.post.id})">Edit</a> | 
       <a ng-really-message="Are You Sure?"
-         ng-really-click="deletePost()">
+         ng-really-click="PostDetail.deletePost()">
         Delete
       </a>
     </p>
   </div>
-
-  <div class="row comment-form" ng-show="isLoggedIn">
-    <form name="commentForm" novalidate ng-submit="addComment()">
-      <div class="form-group col-xs-10"
-           ng-class="{'has-error': commentForm.content.$invalid
-             && commentForm.content.$dirty}">
-        <div>
-          <input type="text" class="form-control" name="content"
-                 placeholder="What do you think of this post?"
-                 autocomplete="off" required
-                 ng-model="newComment.content">
-          <span class="has-error control-label"
-                ng-show="commentForm.content.$invalid && commentForm.content.$dirty">
-            Comment is required
-          </span>
-        </div>
-      </div>
-      <button class="btn btn-primary col-xs-2" ng-disabled="commentForm.$invalid">
-        Create
-      </button>
-    </form>
-  </div>
-
-  <div class="row">
-    <div class="comments" ng-if="isLoggedIn">
-      <h2>Comments</h2>
-      <ul ng-repeat="comment in comments">
-        <li class="col-xs-12">
-          <div class="row">
-            <div class="col-xs-8">
-              <div class="panel panel-primary">
-                <div class="panel-body">
-                  
-                  <a href="#" editable-text="comment.content" onaftersave="editComment($data, comment.id, $index)">
-                    {{comment.content}}
-                  </a>
-                  <i class="glyphicon glyphicon-trash pull-right"
-                     ng-if="userId === comment.userId"          
-                     ng-really-message="Are you sure?"        
-                     ng-really-click="deleteComment(comment.id, $index)"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <ul ng-if="comments.length === 0">
-        <li>No comments yet, add your thoughts</li>
-      </ul>
-    </div>
-    <div class="comments" ng-if="!isLoggedIn">
-      <h2>Comments</h2>
-      <ul ng-repeat="comment in comments">
-        <li>{{comment.content}}</li>
-      </ul>
-      <ul ng-if="comments.length === 0">
-        <li>No comments yet</li>
-      </ul>
-    </div>
-  </div>
+  <!-- Comments -->
+  <div ui-view></div>
 </div>

@@ -1,9 +1,3 @@
 /client/vendor/
-/client/build/prod.js
-/client/build/prod.min.js
-/client/build/app.min.js
-/client/build/controllers.min.js
-/client/build/directives.min.js
-/client/build/filters.min.js
-/client/build/lb-services.min.js
+/client/build/
 /node_modules/

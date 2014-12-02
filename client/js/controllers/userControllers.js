@@ -1,7 +1,8 @@
 (function() {
   'use strict';
   
-  var userCtrls = angular.module('blogApp.controllers.userCtrls', ['lbServices']);
+  var userCtrls = angular.module('blogApp.controllers.userCtrls',
+                                 ['lbServices']);
   
   userCtrls.controller('UserRegisterCtrl', UserRegisterCtrl);
   UserRegisterCtrl.$inject = ['$rootScope', '$scope', '$state',

@@ -20,7 +20,8 @@ module.exports = function(grunt) {
         src: [
           'client/**/*.js',
           '!client/vendor/**/*.js',
-          '!client/js/lb-services.js'
+          '!client/build/**/*.js',
+          '!client/js/services/lb-services.js'
         ]
       },
       backendtest: {

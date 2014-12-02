@@ -1,0 +1,69 @@
+<div class="row comment-form" ng-show="isLoggedIn">
+  <form name="Comments.commentForm" novalidate ng-submit="Comments.addComment()">
+    <div class="form-group col-xs-10"
+         ng-class="{'has-error': Comments.commentForm.content.$invalid
+           && Comments.commentForm.content.$dirty}">
+      <div>
+        <input type="text" class="form-control" name="content"
+               placeholder="What do you think of this post?"
+               autocomplete="off" required
+               ng-model="Comments.newComment.content">
+        <span class="has-error control-label"
+              ng-show="Comments.commentForm.content.$invalid && Comments.commentForm.content.$dirty">
+          Comment is required
+        </span>
+      </div>
+    </div>
+    <button class="btn btn-primary col-xs-2" ng-disabled="Comments.commentForm.$invalid">
+      Create
+    </button>
+  </form>
+</div>
+
+<div class="row">
+  <div class="comments" ng-if="isLoggedIn">
+    <h2>Comments</h2>
+    <ul ng-repeat="comment in Comments.comments">
+      <li class="col-xs-12">
+        <div class="row">
+          <div class="col-xs-8">
+            <div class="panel panel-primary">
+              <div class="panel-body">
+
+                <a href="#" editable-text="comment.content" onaftersave="Comments.editComment($data, comment.id, $index)">
+                  {{comment.content}}
+                </a>
+                <i class="glyphicon glyphicon-trash pull-right"
+                   ng-if="Comments.userId === comment.userId"          
+                   ng-really-message="Are you sure?"        
+                   ng-really-click="Comments.deleteComment(comment.id, $index)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul ng-if="Comments.comments.length === 0">
+      <li>No comments yet, add your thoughts</li>
+    </ul>
+  </div>
+  <div class="comments" ng-if="!isLoggedIn">
+    <h2>Comments</h2>
+    <ul ng-repeat="comment in Comments.comments">
+      <li class="col-xs-12">
+        <div class="row">
+          <div class="col-xs-8">
+            <div class="panel panel-primary">
+              <div class="panel-body">
+                {{comment.content}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul ng-if="Comments.comments.length === 0">
+      <li>No comments yet</li>
+    </ul>
+  </div>
+</div>

@@ -1,31 +1,31 @@
 <h1>Edit a Blog Post</h1>
 <hr>
-<form name="postForm" novalidate ng-submit="editPost(newPost)">
+<form name="PostEdit.postForm" novalidate ng-submit="PostEdit.editPost(PostEdit.newPost)">
   <div class="form-group"
-       ng-class="{'has-error': postForm.title.$invalid
-         && postForm.title.$dirty}">
+       ng-class="{'has-error': PostEdit.postForm.title.$invalid
+         && PostEdit.postForm.title.$dirty}">
     <input type="text" class="form-control" name="title"
            placeholder="Title" autocomplete="off" required
-           ng-model="newPost.title">
+           ng-model="PostEdit.newPost.title">
     <span class="has-error control-label"
-          ng-show="postForm.title.$invalid && postForm.title.$dirty">
+          ng-show="PostEdit.postForm.title.$invalid && PostEdit.postForm.title.$dirty">
       Title is required
     </span>
   </div>
   <div class="form-group"
-       ng-class="{'has-error': postForm.content.$invalid
-         && postForm.content.$dirty}">
+       ng-class="{'has-error': PostEdit.postForm.content.$invalid
+         && PostEdit.postForm.content.$dirty}">
     <textarea class="form-control" name="content"
               placeholder="Write your thoughts here..."               
               autocomplete="off" required rows="12"
-              ng-model="newPost.content"></textarea>
+              ng-model="PostEdit.newPost.content"></textarea>
     <span class="has-error control-label"
-          ng-show="postForm.content.$invalid 
-            && postForm.content.$dirty">
+          ng-show="PostEdit.postForm.content.$invalid 
+            && PostEdit.postForm.content.$dirty">
       Content is required
     </span>
   </div>
-  <button class="btn btn-primary" ng-disabled="postForm.$invalid">
+  <button class="btn btn-primary" ng-disabled="PostEdit.postForm.$invalid">
     Edit!
   </button>
 </form>
