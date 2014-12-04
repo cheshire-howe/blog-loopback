@@ -492,7 +492,7 @@ module.factory(
          *
          * Data properties:
          *
-         *  - `post` – `{array=}` - 
+         *  - `post` – `{object=}` - 
          */
         "findSingle": {
           url: urlBase + "/Posts/:id/findSingle",
@@ -1362,6 +1362,40 @@ module.factory(
         "prototype$updateAttributes": {
           url: urlBase + "/Comments/:id",
           method: "PUT"
+        },
+
+        /**
+         * @ngdoc method
+         * @name lbServices.Comment#getCommentsByPost
+         * @methodOf lbServices.Comment
+         *
+         * @description
+         *
+         * <em>
+         * (The remote method definition does not provide any description.)
+         * </em>
+         *
+         * @param {Object=} parameters Request parameters.
+         *
+         *  - `postId` – `{string}` - 
+         *
+         * @param {function(Object,Object)=} successCb
+         *   Success callback with two arguments: `value`, `responseHeaders`.
+         *
+         * @param {function(Object)=} errorCb Error callback with one argument:
+         *   `httpResponse`.
+         *
+         * @returns {Object} An empty reference that will be
+         *   populated with the actual data once the response is returned
+         *   from the server.
+         *
+         * Data properties:
+         *
+         *  - `comments` – `{object=}` - 
+         */
+        "getCommentsByPost": {
+          url: urlBase + "/Comments/:postId/getCommentsByPost",
+          method: "GET"
         },
 
         // INTERNAL. Use Post.comments.findById() instead.

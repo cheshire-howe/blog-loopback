@@ -21,16 +21,23 @@
     
     var vm = this;
     vm.userId = localStorage.getItem('$LoopBack$currentUserId');
-    vm.comments = getComments();
+    vm.comments = [];
     vm.addComment = addComment;
     vm.editComment = editComment;
     vm.deleteComment = deleteComment;
     
+    getComments();
+    
     // get all comments for this post
     function getComments() {
-      return Post.comments({
-        id: $stateParams.id
-      });
+      Comment
+        .getCommentsByPost({
+          postId: $stateParams.id
+        })
+        .$promise
+        .then(function(result) {
+          vm.comments = result.comments;
+        });
     }
 
     // adds a comment through the post model

@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <h1>{{PostDetail.post.title}}</h1>
+    <div class="blog-content">{{PostDetail.post.content}}</div>
+    <div class="user">
+      <p>Posted by: {{PostDetail.post.user.username}}</p>
+    </div>
+    <p ng-if="PostDetail.userId === PostDetail.post.userId">
+      <a ui-sref="postEdit({id: PostDetail.post.id})">Edit</a> | 
+      <a ng-really-message="Are You Sure?"
+         ng-really-click="PostDetail.deletePost()">
+        Delete
+      </a>
+    </p>
+  </div>
+</div>

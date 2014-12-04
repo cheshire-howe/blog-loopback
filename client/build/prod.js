@@ -28,9 +28,9 @@
     
     // get all comments for this post
     function getComments() {
-      return Post.comments({
-        id: $stateParams.id
-      });
+      return Comment.getCommentsByPost({
+        postId: $stateParams.id
+      }).comments;
     }
 
     // adds a comment through the post model
@@ -188,10 +188,10 @@
   function PostDetailCtrl($rootScope, $stateParams, $state,
                           Post, User) {
     
-    $state.transitionTo('postDetail.comments', $stateParams);
     var vm = this;
     vm.userId = $rootScope.utils.getCurrentUser();
     vm.post = {};
+    vm.getPost = getPost;
     vm.deletePost = deletePost;
 
     getPost();
@@ -242,10 +242,10 @@
    *
    * Methods for editing a post
    */
-  PostEditCtrl.$inject = ['$rootScope', '$scope', '$stateParams',
-                          '$state', 'Post', 'User'];
+  PostEditCtrl.$inject = ['$rootScope', '$stateParams','$state',
+                          'Post', 'User'];
 
-  function PostEditCtrl($rootScope, $scope, $stateParams, $state, Post, User) {
+  function PostEditCtrl($rootScope, $stateParams, $state, Post, User) {
     
     var vm = this;
     vm.userId = $rootScope.utils.getCurrentUser();
@@ -452,6 +452,7 @@
         controllerAs: 'PostDetail'
       })
       .state('postDetail.comments', {
+        url: '',
         templateUrl: 'js/blog/templates/partials/comments.html',
         controller: 'CommentCtrl',
         controllerAs: 'Comments'

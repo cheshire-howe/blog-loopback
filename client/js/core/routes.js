@@ -31,14 +31,26 @@
       })
       .state('postDetail', {
         url: '/Post/:id',
-        templateUrl: 'js/blog/templates/detail.html',
-        controller: 'PostDetailCtrl',
-        controllerAs: 'PostDetail'
-      })
-      .state('postDetail.comments', {
-        templateUrl: 'js/blog/templates/partials/comments.html',
-        controller: 'CommentCtrl',
-        controllerAs: 'Comments'
+        resolve: {
+          id: ['$stateParams', function($stateParams) {
+            return $stateParams.id;
+          }]
+        },
+        views: {
+          '' : {
+            templateUrl: 'js/blog/templates/detail.html'
+          },
+          'singlePost@postDetail': {
+            templateUrl: 'js/blog/templates/partials/singlePost.html',
+            controller: 'PostDetailCtrl',
+            controllerAs: 'PostDetail'
+          },
+          'comments@postDetail': {
+            templateUrl: 'js/blog/templates/partials/comments.html',
+            controller: 'CommentCtrl',
+            controllerAs: 'Comments'
+          }
+        }
       })
       .state('postEdit', {
         url: '/Post/:id/edit',

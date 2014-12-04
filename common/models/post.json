@@ -47,13 +47,6 @@
       "property": "findSingle"
     },
     {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$everyone",
-      "permission": "ALLOW",
-      "property": "__get__comments"
-    },
-    {
       "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "$authenticated",

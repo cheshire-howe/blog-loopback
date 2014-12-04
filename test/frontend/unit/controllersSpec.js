@@ -6,16 +6,18 @@ describe('Blog controllers', function() {
     
   var scope, state, ctrl, $httpBackend, $stateParams, Post;
   
-  var mockData = [
-    {
-      title: "Blog title first",
-      content: "Blog content"
-    },
-    {
-      title: "Blog title second",
-      content: "Blog content second"
-    }
-  ];
+  var mockData = {
+    posts: [
+      {
+        title: "Blog title first",
+        content: "Blog content"
+      },
+      {
+        title: "Blog title second",
+        content: "Blog content second"
+      }
+    ]
+  };
   
   beforeEach(function() {
     this.addMatchers({
@@ -38,20 +40,20 @@ describe('Blog controllers', function() {
   
   describe('PostCtrl', function() {
   
-    var url = '/api/Posts';
+    var url = '/api/Posts/findAll';
     
     beforeEach(inject(function($controller) {
       $httpBackend.expectGET(url)
         .respond(mockData);
-      ctrl = $controller('PostCtrl', { $scope: scope });
+      ctrl = $controller('PostCtrl', {});
     }));
     
     
     it('should fetch 2 posts from xhr', function() {
-      expect(scope.posts).toEqualData([]);
+      expect(ctrl.posts).toEqualData([]);
       
       $httpBackend.flush();
-      expect(scope.posts).toEqualData([
+      expect(ctrl.posts).toEqualData([
         {
           title: "Blog title first",
           content: "Blog content"
@@ -66,8 +68,8 @@ describe('Blog controllers', function() {
     it('should return them in order', function() {
       $httpBackend.flush();
       
-      expect(scope.posts[0].title).toEqual("Blog title first");
-      expect(scope.posts[1].title).toEqual("Blog title second");
+      expect(ctrl.posts[0].title).toEqual("Blog title first");
+      expect(ctrl.posts[1].title).toEqual("Blog title second");
     });
     
   });
@@ -78,12 +80,13 @@ describe('Blog controllers', function() {
     var url = '/api/Posts';
     
     var mockPostData = {title: 'One', content: 'One', userId: 1};
+    var mockPostResonseData = mockData.posts;
     
     beforeEach(inject(function($controller, _Post_) {
       Post = _Post_;
       
       ctrl = $controller('PostCreateCtrl', {
-        $scope: scope, Post: Post
+        Post: Post
       });
     }));
     
@@ -91,28 +94,28 @@ describe('Blog controllers', function() {
       // .expectPOST(url, expectedInput) needs the correct input
       // when mockPostData is the second argument
       $httpBackend.expectPOST(url, mockPostData)
-        .respond(mockData.push(mockPostData));
+        .respond(mockPostResonseData.push(mockPostData));
       
-      scope.newPost = mockPostData;
-      scope.addPost();
+      ctrl.newPost = mockPostData;
+      ctrl.addPost();
       $httpBackend.flush();
       
-      expect(mockData.length).toBe(3);
+      expect(mockPostResonseData.length).toBe(3);
     });
     
     it('should trigger Post.create', function() {      
       spyOn(Post, 'create').andCallThrough();
       
-      scope.newPost = mockPostData;
-      scope.addPost();
+      ctrl.newPost = mockPostData;
+      ctrl.addPost();
       expect(Post.create).toHaveBeenCalled();
     });
     
     it('should make xhr request on success', function() {
       $httpBackend.expectPOST(url, mockPostData)
-        .respond(mockData.push(mockPostData));
-      scope.newPost = mockPostData;
-      scope.addPost();
+        .respond(mockPostResonseData.push(mockPostData));
+      ctrl.newPost = mockPostData;
+      ctrl.addPost();
       $httpBackend.flush();
       state.expectTransitionTo('blog');
     });
@@ -121,14 +124,20 @@ describe('Blog controllers', function() {
   
   describe('PostDetailCtrl', function() {
     
-    var detailUrl = '/api/Posts/1';
-    
-    var commentsUrl = detailUrl + '/comments';
+    var detailUrl = '/api/Posts/1/findSingle';
     
     var singleMockData = {
       title: 'One',
       id: 1,
       content: 'One'
+    };
+    
+    var singleMockResponseData = {
+      post: {
+        title: 'One',
+        id: 1,
+        content: 'One'
+      }
     };
     
     var commentMockData = [
@@ -173,26 +182,26 @@ describe('Blog controllers', function() {
       });
       
       $httpBackend.expectGET(detailUrl)
-        .respond(singleMockData);
-      $httpBackend.expectGET(commentsUrl)
-        .respond(commentMockData);
+        .respond(singleMockResponseData);
+      /*$httpBackend.expectGET(commentsUrl)
+        .respond(commentMockData);*/
     }));
     
     it('should get a single blog post', function() {
-      expect(scope.post).toEqualData({});
+      expect(ctrl.post).toEqualData({});
       $httpBackend.flush();
-      expect(scope.post).toEqualData(singleMockData);
+      expect(ctrl.post).toEqualData(singleMockData);
     });
     
     it('should delete the blog post by id and redirect', function() {
       $httpBackend.expectDELETE(detailUrl)
         .respond(204);
       
-      scope.deletePost(stateParams.id);
+      ctrl.deletePost(stateParams.id);
       state.expectTransitionTo('blog');
     });
     
-    it('should get all the comments', function() {
+    /*it('should get all the comments', function() {
       $httpBackend.flush();
       expect(scope.comments.length).toEqual(2);
     });
@@ -229,15 +238,15 @@ describe('Blog controllers', function() {
       scope.post.id = singleMockData.id;
       scope.deleteComment(commentMockData[0].id);
       $httpBackend.flush();
-    });
+    });*/
     
   });
   
   
   describe('PostEditCtrl', function() {
     
-    var putUrl = '/api/Posts?id=1';
-    var getUrl = '/api/Posts/1';
+    var putUrl = '/api/users/1/posts/1';
+    var getUrl = '/api/Posts/1/findSingle';
     
     beforeEach(inject(function($controller, _Post_) {
       
@@ -249,12 +258,10 @@ describe('Blog controllers', function() {
       
       var initialPutData = {
         title: 'One',
-        id: 1,
         content: 'One'
       };
       
       ctrl = $controller('PostEditCtrl', {
-        $scope: scope,
         $stateParams: stateParams,
         Post: Post
       });
@@ -266,16 +273,16 @@ describe('Blog controllers', function() {
     it('should send post data to the server', function() {
       var editedPutData = new Post({
         title: 'Two',
-        id: 1,
         content: 'One'
       });
       
       $httpBackend.expectPUT(putUrl, editedPutData)
         .respond(editedPutData);
-      
-      scope.newPost = editedPutData;
-      scope.editPost();
       state.expectTransitionTo('postDetail');
+      
+      ctrl.userId = 1;
+      ctrl.editPost(editedPutData);
+      
       $httpBackend.flush();
       state.ensureAllTransitionsHappened();
     });
@@ -291,14 +298,13 @@ describe('Blog controllers', function() {
     
     beforeEach(inject(function($controller, _User_) {
       User = _User_;
-      urlUsers = '/api/Users';
+      urlUsers = '/api/users';
       mockResponseUserData = {
         email: 'josh@gmail.com',
         id: 1
       };
       
       ctrl = $controller('UserRegisterCtrl', {
-        $scope: scope,
         User: User
       });
     }));
@@ -311,8 +317,8 @@ describe('Blog controllers', function() {
         .respond(mockUserData);
       state.expectTransitionTo('blog');
       
-      scope.newUser = mockUserData;
-      scope.register();
+      ctrl.newUser = mockUserData;
+      ctrl.register();
       
       $httpBackend.flush();
     });
@@ -323,14 +329,13 @@ describe('Blog controllers', function() {
     
     beforeEach(inject(function($controller, _User_) {
       User = _User_;
-      urlUsers = '/api/Users';
+      urlUsers = '/api/users';
       mockUserData = {
         email: 'josh@gmail.com',
         password: 'foobar'
       };
       
       ctrl = $controller('UserLoginCtrl', {
-        $scope: scope,
         User: User
       });
     }));
@@ -340,8 +345,8 @@ describe('Blog controllers', function() {
         .respond(mockUserData);
       state.expectTransitionTo('blog');
       
-      scope.user = mockUserData;
-      scope.login();
+      ctrl.user = mockUserData;
+      ctrl.login();
       
       $httpBackend.flush();
     });
@@ -349,30 +354,3 @@ describe('Blog controllers', function() {
   });
   
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

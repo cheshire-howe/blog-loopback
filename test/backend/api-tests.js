@@ -10,17 +10,22 @@ describe('Blog post api', function() {
     
     var url = '/api/Posts';
     
-    it('should return a status code of 200 on GET /api/Posts', function(done) {
-      api.get(url)
+    it('should return 200 on GET /api/Posts/findAll', function(done) {
+      api.get(url + '/findAll')
         .expect(200, done);
     });
+
+    it('should return 401 on GET /api/Posts', function(done) {
+      api.get(url)
+        .expect(401, done);
+    });
     
-    it('should return a json array', function(done) {
+    it('should return a json object', function(done) {
       api.get(url)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
           if (err) return done(err);
-          res.body.should.be.instanceof(Array);
+          res.body.should.be.instanceof(Object);
           done();
         });
     });
@@ -30,22 +35,27 @@ describe('Blog post api', function() {
         .send({ name: "Josh", isa: "guy"})
         .expect(401, done);
     });
-    /*
-    it('should return 201 on successful POST', function(done) {
+    
+    it('should return 401 on POST attempt', function(done) {
       api.post(url)
-        .send({ title: "Blog", content: "Post"})
-        .expect(200, done);
+        .send({ id: 25, title: "Blog", content: "Post"})
+        .expect(401, done);
     });
-    */
+    
+    it('should return 401 on DELETE attempt', function(done) {
+      api.delete(url + '/25')
+        .expect(401, done);
+    });
+    
   });
   
-  describe('comment on blog post', function() {
+  describe('comments on blog posts', function() {
     
     var url = '/api/Posts/1/comments';
     
     it('should not be a public api', function(done) {
       api.get('/api/Comments')
-        .expect(404, done);
+        .expect(401, done);
     });
     
     it('should be nested in Posts', function(done) {
@@ -59,10 +69,10 @@ describe('Blog post api', function() {
         .expect(200, done);
     });
     */
-    it('should return 422 on bad data input', function(done) {
+    it('should return 401 on any POST request', function(done) {
       api.post(url)
         .send({ name: "Comment" })
-        .expect(422, done);
+        .expect(401, done);
     });
     
     it('should return 404 when postId does not exist', function(done) {
